@@ -1,6 +1,10 @@
 package com.fanhl.layoutmanager
 
+import android.R.attr.topOffset
 import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
+import android.view.View
+
 
 class DemoLayoutManager : RecyclerView.LayoutManager() {
     private var mDecoratedChildWidth: Int = 0
@@ -47,11 +51,75 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
         fillGrid(DIRECTION_NONE, childLeft, childTop, recycler)
     }
 
+    override fun canScrollVertically(): Boolean {
+        return true
+    }
+
     private fun updateWindowSizing() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun fillGrid(direction: Int, childLeft: Int, childTop: Int, recycler: RecyclerView.Recycler) {
+        val viewCache = SparseArray<View>(childCount)
+        //...
+        if (childCount != 0) {
+            //...
+            //Cache all views by their existing position, before updating counts
+            for (i in 0 until childCount) {
+                val position = positionOfIndex(i)
+                val child = getChildAt(i)
+                viewCache.put(position, child)
+            }
+            //Temporarily detach all views.
+            // Views we still need will be added back at the proper index.
+            for (i in 0 until viewCache.size()) {
+                detachView(viewCache.valueAt(i))
+            }
+        }
+
+
+//        for (i in 0 until getVisibleChildCount()) {
+//            //...
+//
+//            //Layout this position
+//            var view = viewCache.get(nextPosition)
+//            if (view == null) {
+//                /*
+//                 * The Recycler will give us either a newly constructed view,
+//                 * or a recycled view it has on-hand. In either case, the
+//                 * view will already be fully bound to the data by the
+//                 * adapter for us.
+//                 */
+//                view = recycler.getViewForPosition(nextPosition)
+//                addView(view)
+//
+//                /*
+//                 * It is prudent to measure/layout each new view we
+//                 * receive from the Recycler. We don't have to do
+//                 * this for views we are just re-arranging.
+//                 */
+//                measureChildWithMargins(view, 0, 0)
+//                layoutDecorated(
+//                    view, leftOffset, topOffset,
+//                    leftOffset + mDecoratedChildWidth,
+//                    topOffset + mDecoratedChildHeight
+//                )
+//            } else {
+//                //Re-attach the cached view at its new index
+//                attachView(view)
+//                viewCache.remove(nextPosition)
+//            }
+//
+//            //...
+//         }
+
+
+        for (i in 0 until viewCache.size()) {
+            recycler.recycleView(viewCache.valueAt(i))
+        }
+    }
+
+    private fun positionOfIndex(index: Int): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
