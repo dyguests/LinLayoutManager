@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.fanhl.layoutmanager.DemoLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_view.view.*
 
@@ -20,6 +21,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun assignViews() {
+        fab.setOnClickListener {
+            recycler_view.layoutManager = DemoLayoutManager()
+        }
     }
 
     private fun initData() {
