@@ -2,6 +2,7 @@ package com.fanhl.layoutmanager.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun assignViews() {
         LinearLayoutManager::class.java
+        GridLayoutManager::class.java
 
         recycler_view.layoutManager = DemoLayoutManager()
 
