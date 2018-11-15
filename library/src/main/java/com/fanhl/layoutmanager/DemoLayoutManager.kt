@@ -30,4 +30,10 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
             offsetY += height
         }
     }
+
+    override fun canScrollVertically(): Boolean {
+        return true
+    }
+
+
 }
