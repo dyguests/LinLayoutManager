@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun assignViews() {
         LinearLayoutManager::class.java
+
+        recycler_view.layoutManager = DemoLayoutManager()
+
         fab.setOnClickListener {
             recycler_view.layoutManager = DemoLayoutManager()
         }

@@ -61,6 +61,12 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
             travel = totalHeight - getVerticalSpace() - verticalScrollOffset
         }
 
+        //将竖直方向的偏移量+travel
+        verticalScrollOffset += travel
+
+        // 平移容器内的item
+        offsetChildrenVertical(-travel)
+
         return travel
     }
 
