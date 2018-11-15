@@ -20,25 +20,27 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
         if (state.isPreLayout) {
             return
         }
-
+        //在布局之前，将所有的子View先Detach掉，放入到Scrap缓存中
         detachAndScrapAttachedViews(recycler)
-
+        //定义竖直方向的偏移量
         var offsetY = 0
         totalHeight = 0
         for (i in 0 until itemCount) {
-
+            //这里就是从缓存里面取出
             val view = recycler.getViewForPosition(i)
-
+            //将View加入到RecyclerView中
             addView(view)
 
             measureChildWithMargins(view, 0, 0)
 
             val width = getDecoratedMeasuredWidth(view)
             val height = getDecoratedMeasuredHeight(view)
-
+            //最后，将View布局
             layoutDecorated(view, 0, offsetY, width, offsetY + height)
-
+            //将竖直方向偏移量增大height
             offsetY += height
+            //
+            totalHeight += height
         }
 
         //如果所有子View的高度和没有填满RecyclerView的高度，
