@@ -121,8 +121,8 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
                 measureChildWithMargins(scrap, 0, 0)
                 addView(scrap)
 
-                scrap.scaleX=.8f
-                scrap.scaleY=.8f
+//                scrap.scaleX=.8f
+//                scrap.scaleY=.8f
 
                 val frame = allItemFrames.get(i)
                 //将这个item布局出来
