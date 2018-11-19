@@ -2,6 +2,7 @@ package com.fanhl.layoutmanager
 
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.View
@@ -83,6 +84,8 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
     }
 
     override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+        Log.i(TAG, "scrollVerticallyBy: dy:$dy")
+
         //先detach掉所有的子View
         detachAndScrapAttachedViews(recycler)
 
@@ -160,5 +163,9 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
 
     private fun getVerticalSpace(): Int {
         return height - paddingBottom - paddingTop
+    }
+
+    companion object {
+        private val TAG = DemoLayoutManager::class.java.simpleName
     }
 }
