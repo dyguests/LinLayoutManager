@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.util.SparseBooleanArray
+import android.view.View
 
 
 class DemoLayoutManager : RecyclerView.LayoutManager() {
@@ -47,7 +48,11 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
 
             totalHeight += height
             val frame = allItemFrames.get(i) ?: Rect()
-            frame.set(0, offsetY, width, offsetY + height)
+            if (i % 2 == 0) {
+                frame.set(0, offsetY, width, offsetY + height)
+            } else {
+                frame.set(this.width / 2, offsetY, this.width / 2 + width, offsetY + height)
+            }
             // 将当前的Item的Rect边界数据保存
             allItemFrames.put(i, frame)
             // 由于已经调用了detachAndScrapAttachedViews，因此需要将当前的Item设置为未出现过
@@ -60,6 +65,17 @@ class DemoLayoutManager : RecyclerView.LayoutManager() {
         // 则将高度设置为RecyclerView的高度
         totalHeight = Math.max(totalHeight, getVerticalSpace())
         recycleAndFillItems(recycler, state)
+    }
+
+    override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
+        val lp = child.layoutParams as RecyclerView.LayoutParams
+
+//        val widthSpec = getChildMeasureSpec(this.width, this.widthMode, this.paddingLeft + this.paddingRight + lp.leftMargin + lp.rightMargin + widthUsed, lp.width, this.canScrollHorizontally())
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(width / 2, View.MeasureSpec.EXACTLY)
+//        val heightSpec = View.MeasureSpec.makeMeasureSpec(width / 2, View.MeasureSpec.EXACTLY)
+        val heightSpec = getChildMeasureSpec(this.height, this.heightMode, this.paddingTop + this.paddingBottom + lp.topMargin + lp.bottomMargin + heightUsed, lp.height, this.canScrollVertically())
+
+        child.measure(widthSpec, heightSpec)
     }
 
     override fun canScrollVertically(): Boolean {
