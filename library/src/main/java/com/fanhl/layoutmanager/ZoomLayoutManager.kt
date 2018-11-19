@@ -71,7 +71,7 @@ class ZoomLayoutManager(
 
         //如果所有子View的高度和没有填满RecyclerView的高度，
         // 则将高度设置为RecyclerView的高度
-        totalWidth = Math.max(totalWidth, getVerticalSpace())
+        totalWidth = Math.max(totalWidth, getHorizontalSpace())
 
         recycleAndFillItems(recycler, state)
     }
@@ -88,8 +88,8 @@ class ZoomLayoutManager(
 
         if (horizontalScrollOffset + dx < 0) {
             travel = -horizontalScrollOffset
-        } else if (horizontalScrollOffset + dx > totalWidth - getVerticalSpace()) {
-            travel = totalWidth - getVerticalSpace() - horizontalScrollOffset
+        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
+            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
         }
 
         //将水平方向的偏移量+travel
@@ -108,7 +108,7 @@ class ZoomLayoutManager(
         }
 
         // 当前scroll offset状态下的显示区域
-        val displayFrame = Rect(0, horizontalScrollOffset, getHorizontalSpace(), horizontalScrollOffset + getVerticalSpace())
+        val displayFrame = Rect(horizontalScrollOffset, 0, horizontalScrollOffset + getHorizontalSpace(), getVerticalSpace())
 
         /*
          * 将滑出屏幕的Items回收到Recycle缓存中
