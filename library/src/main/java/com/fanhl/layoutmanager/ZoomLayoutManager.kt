@@ -1,9 +1,13 @@
 package com.fanhl.layoutmanager
 
+import android.animation.ValueAnimator
 import android.graphics.Rect
+import android.support.annotation.IntDef
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.util.SparseArray
 import android.util.SparseBooleanArray
+import android.view.animation.BounceInterpolator
 
 /**
  * 可缩放的LayoutManager
@@ -17,6 +21,22 @@ class ZoomLayoutManager(
     private val allItemFrames = SparseArray<Rect>()
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
     private val hasAttachedItems = SparseBooleanArray()
+
+    @ZoomMode
+    var zoomMode: Int = ZOOM_MODE_NONE
+        set(value) {
+            if (field == value) {
+                return
+            }
+
+            field = value
+            animateZoom()
+        }
+
+    /** 完全缩放到的值 */
+    var zoom: Float = 0.8f
+    /** 当前动画进度下的zoom的值 */
+    var zoomInProgress: Float = 1f
 
     /**
      *  临时存放rect
@@ -133,8 +153,8 @@ class ZoomLayoutManager(
                 measureChildWithMargins(scrap, 0, 0)
                 addView(scrap)
 
-//                scrap.scaleX=.8f
-//                scrap.scaleY=.8f
+                scrap.scaleX = zoomInProgress
+                scrap.scaleY = zoomInProgress
 
                 val frame = allItemFrames.get(i)
                 //将这个item布局出来
@@ -149,6 +169,26 @@ class ZoomLayoutManager(
         }
     }
 
+    private fun animateZoom() {
+        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+            interpolator = BounceInterpolator()
+            duration = 1000
+            addUpdateListener {
+                val animatorValue = it.animatedValue as Float
+                zoomInProgress = if (zoomMode == ZOOM_MODE_ZOOMED) {
+                    1f * (1f - animatorValue) + zoom * animatorValue
+                } else {
+                    1f * animatorValue + zoom * (1f - animatorValue)
+                }
+
+                Log.d(TAG, "animateZoom: zoomInProgress:$zoomInProgress")
+
+                requestLayout()
+                requestSimpleAnimationsInNextLayout()
+            }
+        }
+        animator.start()
+    }
 
     private fun getHorizontalSpace(): Int {
         return width - paddingLeft - paddingRight
@@ -157,4 +197,15 @@ class ZoomLayoutManager(
     private fun getVerticalSpace(): Int {
         return height - paddingBottom - paddingTop
     }
+
+    companion object {
+        private val TAG = ZoomLayoutManager::class.java.simpleName
+
+        const val ZOOM_MODE_NONE = 0
+        const val ZOOM_MODE_ZOOMED = 1
+    }
+
+    @Retention(AnnotationRetention.SOURCE)
+    @IntDef(ZOOM_MODE_NONE, ZOOM_MODE_ZOOMED)
+    annotation class ZoomMode
 }
