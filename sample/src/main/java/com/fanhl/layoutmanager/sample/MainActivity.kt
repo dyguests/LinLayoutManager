@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
+import android.support.v7.widget.StaggeredGridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.fanhl.layoutmanager.ZoomLayoutManager
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private fun assignViews() {
         LinearLayoutManager::class.java
         GridLayoutManager::class.java
+        StaggeredGridLayoutManager::class.java
 
         recycler_view.layoutManager = zoomLayoutManager
         PagerSnapHelper().attachToRecyclerView(recycler_view)
