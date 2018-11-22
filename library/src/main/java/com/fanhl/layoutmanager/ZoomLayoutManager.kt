@@ -151,10 +151,11 @@ class ZoomLayoutManager(
             if (Rect.intersects(displayFrame, allItemFrames.get(i))) {
                 val scrap = recycler.getViewForPosition(i)
                 measureChildWithMargins(scrap, 0, 0)
-                addView(scrap)
 
                 scrap.scaleX = zoomInProgress
                 scrap.scaleY = zoomInProgress
+
+                addView(scrap)
 
                 val frame = allItemFrames.get(i)
                 //将这个item布局出来
