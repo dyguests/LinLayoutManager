@@ -25,14 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun assignViews() {
-        LinearLayoutManager::class.java
-        GridLayoutManager::class.java
-        StaggeredGridLayoutManager::class.java
-
         recycler_view.layoutManager = CurveLayoutManger()
-
-        fab.setOnClickListener {
-        }
     }
 
     private fun initData() {
