@@ -178,7 +178,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
                 left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
                 top = (vector2.y * getVerticalSpace() - 0.5f * height).toInt()
                 right = (vector2.x * getHorizontalSpace() + 0.5f * width).toInt()
-                top = (vector2.y * getVerticalSpace() + 0.5f * height).toInt()
+                bottom = (vector2.y * getVerticalSpace() + 0.5f * height).toInt()
             }
 
             if (Rect.intersects(displayFrame, childFrame)) {
