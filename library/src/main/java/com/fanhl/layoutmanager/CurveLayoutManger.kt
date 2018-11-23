@@ -173,8 +173,13 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val (width, height) = allItemSize[i]
 
             // 对应view的布局位置
-            curve.getPosition(i, width, height, childFrame)
-//            childFrame
+            curve.getPosition(i, width, height, vector2)
+            childFrame.apply {
+                left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
+                top = (vector2.y * getVerticalSpace() - 0.5f * height).toInt()
+                right = (vector2.x * getHorizontalSpace() + 0.5f * width).toInt()
+                top = (vector2.y * getVerticalSpace() + 0.5f * height).toInt()
+            }
 
             if (Rect.intersects(displayFrame, childFrame)) {
                 val scrap = recycler.getViewForPosition(i)
@@ -230,17 +235,17 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
         /**
          * @param displayFrame 屏幕显示区域
-         * @param position 当前元素的位置(in itemCount)，当前child的宽
+         * @param i 当前元素的位置(in itemCount)，当前child的宽
          * @param width 当前元素宽
          * @param height 当前元素高
          * @param horizontalScrollOffset 当前屏幕水平偏移
          * @param verticalScrollOffset 当前屏幕垂直偏移
          */
         fun getPosition(
-            position: Int,
+            i: Int,
             width: Int,
             height: Int,
-            frame: Rect
+            position: Vector2
         )
     }
 
@@ -259,22 +264,20 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         override fun getScrollOrientation() = HORIZONTAL
 
         override fun getPosition(
-            position: Int,
+            i: Int,
             width: Int,
             height: Int,
-            frame: Rect
+            position: Vector2
         ) {
-            frame.apply {
-                left = position * width
-                top = 0
-                right = (position + 1) * width
-                bottom = height
+            position.apply {
+                x = i + 0.5f
+                y = 0.5f
             }
-//            frame.apply {
+//            position.apply {
 //                left = 0
-//                top = position * height
+//                top = i * height
 //                right = width
-//                bottom = (position + 1) * height
+//                bottom = (i + 1) * height
 //            }
         }
     }
