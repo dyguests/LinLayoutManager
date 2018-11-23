@@ -243,11 +243,11 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
 
         /**
-         * @param input 当前元素的位置(in itemCount)，当前child的宽
+         * @param i 当前元素的位置(in itemCount)，当前child的宽
          * @param position 第i个元素的位置
          */
         fun getInterpolation(
-            input: Float,
+            i: Float,
             position: Vector2
         )
     }
@@ -267,12 +267,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         override fun getScrollOrientation() = HORIZONTAL
 
         override fun getInterpolation(
-            input: Float,
+            i: Float,
             position: Vector2
         ) {
             position.apply {
-                x = input + 0.5f
-                y = .2f * input * input + 0.5f
+                x = i + 0.5f
+                y = .2f * i * i + 0.5f
             }
         }
     }

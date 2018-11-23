@@ -12,7 +12,7 @@ Some default Curve.
 
 | type | 类型 | code | sample | remark |
 |---|---|---|---|---|
-|   |   |   |   |   |
+| Parabola | 抛物线 | x=i+0.5; y=0.2i^2+0.5 |   |   |
 |   |   |   |   |   |
 |   |   |   |   |   |
 
