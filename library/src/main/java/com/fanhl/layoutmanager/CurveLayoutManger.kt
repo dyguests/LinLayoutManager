@@ -173,7 +173,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val (width, height) = allItemSize[i]
 
             // 对应view的布局位置
-            curve.getPosition(i, width, height, vector2)
+            curve.getPosition(i, vector2)
             childFrame.apply {
                 left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
                 top = (vector2.y * getVerticalSpace() - 0.5f * height).toInt()
@@ -233,18 +233,13 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
 
         fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
+
         /**
-         * @param displayFrame 屏幕显示区域
          * @param i 当前元素的位置(in itemCount)，当前child的宽
-         * @param width 当前元素宽
-         * @param height 当前元素高
-         * @param horizontalScrollOffset 当前屏幕水平偏移
-         * @param verticalScrollOffset 当前屏幕垂直偏移
+         * @param position 第i个元素的位置
          */
         fun getPosition(
             i: Int,
-            width: Int,
-            height: Int,
             position: Vector2
         )
     }
@@ -265,20 +260,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
 
         override fun getPosition(
             i: Int,
-            width: Int,
-            height: Int,
             position: Vector2
         ) {
             position.apply {
                 x = i + 0.5f
                 y = 0.5f
             }
-//            position.apply {
-//                left = 0
-//                top = i * height
-//                right = width
-//                bottom = (i + 1) * height
-//            }
         }
     }
 }
