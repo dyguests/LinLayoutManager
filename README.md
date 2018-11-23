@@ -8,13 +8,17 @@ Some LayoutManager created by fanhl.
 
 A linear LayoutManger can scroll by any `Curves`.
 
-Some default Curve.
+#### Some default curve.
 
 | type | 类型 | code | sample | remark |
 |---|---|---|---|---|
 | Parabola | 抛物线 | x=i+0.5; y=0.2i^2+0.5 | ![](./graphics/parabola.gif)  |   |
 |   |   |   |   |   |
 |   |   |   |   |   |
+
+#### Custom your curve.
+
+TODO 等会写
 
 ## Usage
 
