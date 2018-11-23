@@ -272,7 +272,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         ) {
             position.apply {
                 x = i + 0.5f
-                y = 0.5f
+                y = .2f * i * i + 0.5f
             }
         }
     }
