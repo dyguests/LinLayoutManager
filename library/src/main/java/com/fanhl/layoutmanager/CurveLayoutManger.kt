@@ -3,6 +3,7 @@ package com.fanhl.layoutmanager
 import android.graphics.Rect
 import android.support.annotation.IntDef
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.util.SparseBooleanArray
 
 /**
@@ -123,6 +124,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         }
 
         //重新显示需要出现在屏幕的子View
+        log("recycleAndFillItems: before for")
         for (i in 0 until itemCount) {
             // 获取对应view
             val scrap = recycler.getViewForPosition(i)
@@ -148,6 +150,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
                 )
             }
         }
+        log("recycleAndFillItems: after for")
     }
 
     private fun getHorizontalSpace(): Int {
@@ -158,7 +161,14 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         return height - paddingBottom - paddingTop
     }
 
+    private fun log(msg: String) {
+        if (IS_DEBUG) Log.d(TAG, msg)
+    }
+
     companion object {
+        private val TAG = CurveLayoutManger::class.java.simpleName
+
+        private var IS_DEBUG = true
 
         const val HORIZONTAL = 0
         const val VERTICAL = 1
