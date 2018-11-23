@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.fanhl.layoutmanager.CurveLayoutManger
+import com.fanhl.layoutmanager.curve.Slash
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_view.view.*
 
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun assignViews() {
-        recycler_view.layoutManager = CurveLayoutManger()
+        recycler_view.layoutManager = CurveLayoutManger(Slash())
     }
 
     private fun initData() {

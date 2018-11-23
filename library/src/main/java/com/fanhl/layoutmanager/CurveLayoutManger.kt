@@ -13,7 +13,9 @@ import com.fanhl.layoutmanager.curve.Parabola
  *
  * @author fanhl
  */
-class CurveLayoutManger : RecyclerView.LayoutManager() {
+class CurveLayoutManger(
+    var curve: Curve = Parabola()
+) : RecyclerView.LayoutManager() {
     private var horizontalScrollOffset = 0
     private var verticalScrollOffset = 0
 
@@ -24,8 +26,6 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
     private val allItemSize = SparseArray<Size>()
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
     private val hasAttachedItems = SparseBooleanArray()
-
-    var curve: Curve = Parabola()
 
     /**
      *  临时存放rect
