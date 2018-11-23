@@ -177,7 +177,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             }
 
             // 对应view的布局位置
-            curve.getPosition(i - offset, vector2)
+            curve.getInterpolation(i - offset, vector2)
 
             // 对应view的显示尺寸
             val (width, height) = allItemSize[i]
@@ -243,11 +243,11 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
 
         /**
-         * @param i 当前元素的位置(in itemCount)，当前child的宽
+         * @param input 当前元素的位置(in itemCount)，当前child的宽
          * @param position 第i个元素的位置
          */
-        fun getPosition(
-            i: Float,
+        fun getInterpolation(
+            input: Float,
             position: Vector2
         )
     }
@@ -266,13 +266,13 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
     class Parabola : Curve {
         override fun getScrollOrientation() = HORIZONTAL
 
-        override fun getPosition(
-            i: Float,
+        override fun getInterpolation(
+            input: Float,
             position: Vector2
         ) {
             position.apply {
-                x = i + 0.5f
-                y = .2f * i * i + 0.5f
+                x = input + 0.5f
+                y = .2f * input * input + 0.5f
             }
         }
     }
