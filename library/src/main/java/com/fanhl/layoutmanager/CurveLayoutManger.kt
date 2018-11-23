@@ -206,9 +206,9 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             frame: Rect
         ) {
             frame.apply {
-                left = /*position * width*/horizontalScrollOffset
+                left = position * width
                 top = 0
-                right = /*(position + 1) **/ width + horizontalScrollOffset
+                right = (position + 1) * width
                 bottom = height
             }
         }
