@@ -31,6 +31,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
      *  用于参与 recycleAndFillItems 中的计算
      */
     private val childFrame = Rect()
+    /**
+     *  临时存放坐标
+     *
+     * 用于参考坐标计算
+     */
+    private val vector2 = Vector2()
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
@@ -167,7 +173,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val (width, height) = allItemSize[i]
 
             //对应view的布局位置
-            curve.getFrame(displayFrame, horizontalScrollOffset, verticalScrollOffset, i, width, height, childFrame)
+            curve.getPosition(displayFrame, horizontalScrollOffset, verticalScrollOffset, i, width, height, childFrame)
             if (Rect.intersects(displayFrame, childFrame)) {
                 val scrap = recycler.getViewForPosition(i)
 
@@ -228,7 +234,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
          * @param horizontalScrollOffset 当前屏幕水平偏移
          * @param verticalScrollOffset 当前屏幕垂直偏移
          */
-        fun getFrame(
+        fun getPosition(
             displayFrame: Rect,
             horizontalScrollOffset: Int,
             verticalScrollOffset: Int,
@@ -244,11 +250,16 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         var height: Int = 0
     )
 
+    data class Vector2(
+        var x: Float = 0f,
+        var y: Float = 0f
+    )
+
     /** 抛物线 */
     class Parabola : Curve {
         override fun getScrollOrientation() = HORIZONTAL
 
-        override fun getFrame(
+        override fun getPosition(
             displayFrame: Rect,
             horizontalScrollOffset: Int, verticalScrollOffset: Int,
             position: Int,
