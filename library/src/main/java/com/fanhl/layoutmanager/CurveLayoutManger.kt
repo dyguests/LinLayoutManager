@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.util.SparseArray
 import android.util.SparseBooleanArray
+import com.fanhl.layoutmanager.curve.Parabola
 
 /**
  * 自定义曲线LayoutManager
@@ -90,11 +91,11 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
     }
 
     override fun canScrollHorizontally(): Boolean {
-        return curve.canScrollHorizontally()
+        return curve.getScrollOrientation() != VERTICAL
     }
 
     override fun canScrollVertically(): Boolean {
-        return curve.canScrollVertically()
+        return curve.getScrollOrientation() == VERTICAL
     }
 
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
@@ -237,10 +238,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
     /** layout用的曲线 */
     interface Curve {
         @Orientation
-        fun getScrollOrientation(): Int
+        fun getScrollOrientation(): Int {
+            return HORIZONTAL
+        }
 
-        fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
-        fun canScrollVertically() = getScrollOrientation() == VERTICAL
+//        fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
+//        fun canScrollVertically() = getScrollOrientation() == VERTICAL
 
         /**
          * @param i 当前元素的位置(in itemCount)，当前child的宽
@@ -261,19 +264,4 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         var x: Float = 0f,
         var y: Float = 0f
     )
-
-    /** 抛物线 */
-    class Parabola : Curve {
-        override fun getScrollOrientation() = HORIZONTAL
-
-        override fun getInterpolation(
-            i: Float,
-            position: Vector2
-        ) {
-            position.apply {
-                x = i + 0.5f
-                y = .2f * i * i + 0.5f
-            }
-        }
-    }
 }

@@ -1,48 +1,21 @@
-package com.fanhl.layoutmanager
+package com.fanhl.layoutmanager.sample.widget
 
-import android.animation.ValueAnimator
 import android.graphics.Rect
-import android.support.annotation.IntDef
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.util.SparseArray
 import android.util.SparseBooleanArray
-import android.view.animation.BounceInterpolator
+import android.view.View
 
-/**
- * 可缩放的LayoutManager
- */
-class ZoomLayoutManager(
-) : RecyclerView.LayoutManager() {
-    private var horizontalScrollOffset = 0
-    private var totalWidth = 0
+
+class DemoLayoutManager : RecyclerView.LayoutManager() {
+    private var verticalScrollOffset = 0
+    private var totalHeight = 0
 
     //保存所有的Item的上下左右的偏移量信息
     private val allItemFrames = SparseArray<Rect>()
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
     private val hasAttachedItems = SparseBooleanArray()
-
-    @ZoomMode
-    var zoomMode: Int = ZOOM_MODE_NONE
-        set(value) {
-            if (field == value) {
-                return
-            }
-
-            field = value
-            animateZoom()
-        }
-
-    /** 完全缩放到的值 */
-    var zoom: Float = 0.8f
-    /** 当前动画进度下的zoom的值 */
-    var zoomInProgress: Float = 1f
-
-    /**
-     *  临时存放rect
-     *  用于参与 recycleAndFillItems 中的计算
-     */
-    private val childFrame = Rect()
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
@@ -52,23 +25,21 @@ class ZoomLayoutManager(
     }
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        if (itemCount <= 0) {
-            return
-        }
+        //如果没有item，直接返回
+        if (itemCount <= 0) return
+        // 跳过preLayout，preLayout主要用于支持动画
         if (state.isPreLayout) {
             return
         }
         //在布局之前，将所有的子View先Detach掉，放入到Scrap缓存中
         detachAndScrapAttachedViews(recycler)
-
-        //先默认为水平方向
-
-        var offsetX = 0
-        totalWidth = 0
-
+        //定义竖直方向的偏移量
+        var offsetY = 0
+        totalHeight = 0
         for (i in 0 until itemCount) {
+            //这里就是从缓存里面取出
             val view = recycler.getViewForPosition(i)
-
+            //将View加入到RecyclerView中
             addView(view)
 
             measureChildWithMargins(view, 0, 0)
@@ -76,48 +47,61 @@ class ZoomLayoutManager(
             val width = getDecoratedMeasuredWidth(view)
             val height = getDecoratedMeasuredHeight(view)
 
-            totalWidth += width
-
-            val frame = allItemFrames[i] ?: Rect().also {
-                allItemFrames.put(i, it)
+            totalHeight += height
+            val frame = allItemFrames.get(i) ?: Rect()
+            if (i % 2 == 0) {
+                frame.set(0, offsetY, width, offsetY + height)
+            } else {
+                frame.set(this.width / 2, offsetY, this.width / 2 + width, offsetY + height)
             }
-
-            frame.set(offsetX, 0, offsetX + width, height)
-
+            // 将当前的Item的Rect边界数据保存
+            allItemFrames.put(i, frame)
+            // 由于已经调用了detachAndScrapAttachedViews，因此需要将当前的Item设置为未出现过
             hasAttachedItems.put(i, false)
-
-            offsetX += width
+            //将竖直方向偏移量增大height
+            offsetY += height
         }
 
         //如果所有子View的高度和没有填满RecyclerView的高度，
         // 则将高度设置为RecyclerView的高度
-        totalWidth = Math.max(totalWidth, getHorizontalSpace())
-
+        totalHeight = Math.max(totalHeight, getVerticalSpace())
         recycleAndFillItems(recycler, state)
     }
 
-    override fun canScrollHorizontally(): Boolean {
+    override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
+        val lp = child.layoutParams as RecyclerView.LayoutParams
+
+//        val widthSpec = getChildMeasureSpec(this.width, this.widthMode, this.paddingLeft + this.paddingRight + lp.leftMargin + lp.rightMargin + widthUsed, lp.width, this.canScrollHorizontally())
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(width / 2, View.MeasureSpec.EXACTLY)
+//        val heightSpec = View.MeasureSpec.makeMeasureSpec(width / 2, View.MeasureSpec.EXACTLY)
+        val heightSpec = getChildMeasureSpec(this.height, this.heightMode, this.paddingTop + this.paddingBottom + lp.topMargin + lp.bottomMargin + heightUsed, lp.height, this.canScrollVertically())
+
+        child.measure(widthSpec, heightSpec)
+    }
+
+    override fun canScrollVertically(): Boolean {
         return true
     }
 
-    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+    override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+        Log.i(TAG, "scrollVerticallyBy: dy:$dy")
+
         //先detach掉所有的子View
         detachAndScrapAttachedViews(recycler)
 
-        var travel = dx
+        var travel = dy
 
-        if (horizontalScrollOffset + dx < 0) {
-            travel = -horizontalScrollOffset
-        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
-            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
+        if (verticalScrollOffset + dy < 0) {
+            travel = -verticalScrollOffset
+        } else if (verticalScrollOffset + dy > totalHeight - getVerticalSpace()) {
+            travel = totalHeight - getVerticalSpace() - verticalScrollOffset
         }
 
-        //将水平方向的偏移量+travel
-        horizontalScrollOffset += travel
+        //将竖直方向的偏移量+travel
+        verticalScrollOffset += travel
 
         // 平移容器内的item
         offsetChildrenVertical(-travel)
-
         recycleAndFillItems(recycler, state)
         return travel
     }
@@ -128,11 +112,12 @@ class ZoomLayoutManager(
         }
 
         // 当前scroll offset状态下的显示区域
-        val displayFrame = Rect(horizontalScrollOffset, 0, horizontalScrollOffset + getHorizontalSpace(), getVerticalSpace())
+        val displayFrame = Rect(0, verticalScrollOffset, getHorizontalSpace(), verticalScrollOffset + getVerticalSpace())
 
-        /*
+        /**
          * 将滑出屏幕的Items回收到Recycle缓存中
          */
+        val childFrame = Rect()
         for (i in 0 until childCount) {
             val child = getChildAt(i) ?: continue
             childFrame.left = getDecoratedLeft(child)
@@ -148,47 +133,28 @@ class ZoomLayoutManager(
 
         //重新显示需要出现在屏幕的子View
         for (i in 0 until itemCount) {
+
             if (Rect.intersects(displayFrame, allItemFrames.get(i))) {
+
                 val scrap = recycler.getViewForPosition(i)
                 measureChildWithMargins(scrap, 0, 0)
-
-                scrap.scaleX = zoomInProgress
-                scrap.scaleY = zoomInProgress
-
                 addView(scrap)
+
+//                scrap.scaleX=.8f
+//                scrap.scaleY=.8f
 
                 val frame = allItemFrames.get(i)
                 //将这个item布局出来
                 layoutDecorated(
                     scrap,
-                    frame.left - horizontalScrollOffset,
-                    frame.top,
-                    frame.right - horizontalScrollOffset,
-                    frame.bottom
+                    frame.left,
+                    frame.top - verticalScrollOffset,
+                    frame.right,
+                    frame.bottom - verticalScrollOffset
                 )
+
             }
         }
-    }
-
-    private fun animateZoom() {
-        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
-            interpolator = BounceInterpolator()
-            duration = 1000
-            addUpdateListener {
-                val animatorValue = it.animatedValue as Float
-                zoomInProgress = if (zoomMode == ZOOM_MODE_ZOOMED) {
-                    1f * (1f - animatorValue) + zoom * animatorValue
-                } else {
-                    1f * animatorValue + zoom * (1f - animatorValue)
-                }
-
-                Log.d(TAG, "animateZoom: zoomInProgress:$zoomInProgress")
-
-                requestLayout()
-                requestSimpleAnimationsInNextLayout()
-            }
-        }
-        animator.start()
     }
 
     private fun getHorizontalSpace(): Int {
@@ -200,13 +166,6 @@ class ZoomLayoutManager(
     }
 
     companion object {
-        private val TAG = ZoomLayoutManager::class.java.simpleName
-
-        const val ZOOM_MODE_NONE = 0
-        const val ZOOM_MODE_ZOOMED = 1
+        private val TAG = DemoLayoutManager::class.java.simpleName
     }
-
-    @Retention(AnnotationRetention.SOURCE)
-    @IntDef(ZOOM_MODE_NONE, ZOOM_MODE_ZOOMED)
-    annotation class ZoomMode
 }
