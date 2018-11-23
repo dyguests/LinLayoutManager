@@ -7,6 +7,8 @@ import android.util.SparseBooleanArray
 
 /**
  * 自定义曲线LayoutManager
+ *
+ * @author fanhl
  */
 class CurveLayoutManger : RecyclerView.LayoutManager() {
     private var horizontalScrollOffset = 0
@@ -96,7 +98,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val height = getDecoratedMeasuredHeight(scrap)
 
             //对应view的布局位置
-            curve.getFrame(i, width, height, horizontalScrollOffset, verticalScrollOffset, childFrame)
+            curve.getFrame(displayFrame, horizontalScrollOffset, verticalScrollOffset, i, width, height, childFrame)
 
             if (Rect.intersects(displayFrame, childFrame)) {
                 measureChildWithMargins(scrap, 0, 0)
@@ -141,16 +143,41 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
         fun canScrollHorizontally() = getScrollOrientation() == HORIZONTAL
         /**
-         * 当前元素的位置(in itemCount)，当前child的宽
+         * @param displayFrame 屏幕显示区域
+         * @param position 当前元素的位置(in itemCount)，当前child的宽
+         * @param width 当前元素宽
+         * @param height 当前元素高
+         * @param horizontalScrollOffset 当前屏幕水平偏移
+         * @param verticalScrollOffset 当前屏幕垂直偏移
          */
-        fun getFrame(position: Int, width: Int, height: Int, horizontalScrollOffset: Int, verticalScrollOffset: Int, frame: Rect)
+        fun getFrame(
+            displayFrame: Rect,
+            horizontalScrollOffset: Int,
+            verticalScrollOffset: Int,
+            position: Int,
+            width: Int,
+            height: Int,
+            frame: Rect
+        )
     }
 
     /** 抛物线 */
     class Parabola : Curve {
         override fun getScrollOrientation() = HORIZONTAL
 
-        override fun getFrame(position: Int, width: Int, height: Int, horizontalScrollOffset: Int, verticalScrollOffset: Int, frame: Rect) {
+        override fun getFrame(
+            displayFrame: Rect,
+            horizontalScrollOffset: Int, verticalScrollOffset: Int,
+            position: Int,
+            width: Int, height: Int,
+            frame: Rect
+        ) {
+            // FIXME: 2018/11/22 fanhl
+            // FIXME: 2018/11/22 fanhl
+            // FIXME: 2018/11/22 fanhl
+            // FIXME: 2018/11/22 fanhl
+            // FIXME: 2018/11/22 fanhl
+            // FIXME: 2018/11/22 fanhl
         }
 
     }
