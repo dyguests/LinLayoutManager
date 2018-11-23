@@ -8,14 +8,12 @@ import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.StaggeredGridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.fanhl.layoutmanager.ZoomLayoutManager
+import com.fanhl.layoutmanager.CurveLayoutManger
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_view.view.*
 
 class MainActivity : AppCompatActivity() {
     private val adapter = MainAdapter()
-
-    private val zoomLayoutManager = ZoomLayoutManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +29,9 @@ class MainActivity : AppCompatActivity() {
         GridLayoutManager::class.java
         StaggeredGridLayoutManager::class.java
 
-        recycler_view.layoutManager = zoomLayoutManager
-        PagerSnapHelper().attachToRecyclerView(recycler_view)
+        recycler_view.layoutManager = CurveLayoutManger()
 
         fab.setOnClickListener {
-            zoomLayoutManager.zoomMode = zoomLayoutManager.zoomMode xor ZoomLayoutManager.ZOOM_MODE_ZOOMED
         }
     }
 

@@ -13,6 +13,9 @@ import android.util.SparseBooleanArray
 class CurveLayoutManger : RecyclerView.LayoutManager() {
     private var horizontalScrollOffset = 0
     private var verticalScrollOffset = 0
+
+    private var totalWidth = 0
+
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
     private val hasAttachedItems = SparseBooleanArray()
 
@@ -41,6 +44,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         //在布局之前，将所有的子View先Detach掉，放入到Scrap缓存中
         detachAndScrapAttachedViews(recycler)
 
+        totalWidth = 0
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
 
@@ -48,20 +52,49 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
 
             measureChildWithMargins(view, 0, 0)
 
+            val width = getDecoratedMeasuredWidth(view)
+            val height = getDecoratedMeasuredHeight(view)
+
+            totalWidth += width
+
             hasAttachedItems.put(i, false)
         }
 
-        // 因为这里layout会根据scrollOffset改变改变，所以不能提前定死
+        //如果所有子View的高度和没有填满RecyclerView的高度，
+        // 则将高度设置为RecyclerView的高度
+        totalWidth = Math.max(totalWidth, getHorizontalSpace())
 
         recycleAndFillItems(recycler, state)
+    }
+
+    override fun canScrollHorizontally(): Boolean {
+        return curve.canScrollHorizontally()
     }
 
     override fun canScrollVertically(): Boolean {
         return curve.canScrollVertically()
     }
 
-    override fun canScrollHorizontally(): Boolean {
-        return curve.canScrollHorizontally()
+    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+        //先detach掉所有的子View
+        detachAndScrapAttachedViews(recycler)
+
+        var travel = dx
+
+        if (horizontalScrollOffset + dx < 0) {
+            travel = -horizontalScrollOffset
+        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
+            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
+        }
+
+        //将水平方向的偏移量+travel
+        horizontalScrollOffset += travel
+
+        // 平移容器内的item
+        offsetChildrenHorizontal(-travel)
+
+        recycleAndFillItems(recycler, state)
+        return travel
     }
 
     private fun recycleAndFillItems(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
@@ -140,8 +173,8 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         @Orientation
         fun getScrollOrientation(): Int
 
-        fun canScrollVertically() = getScrollOrientation() == VERTICAL
         fun canScrollHorizontally() = getScrollOrientation() == HORIZONTAL
+        fun canScrollVertically() = getScrollOrientation() == VERTICAL
         /**
          * @param displayFrame 屏幕显示区域
          * @param position 当前元素的位置(in itemCount)，当前child的宽
@@ -172,13 +205,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             width: Int, height: Int,
             frame: Rect
         ) {
-            // FIXME: 2018/11/22 fanhl
-            // FIXME: 2018/11/22 fanhl
-            // FIXME: 2018/11/22 fanhl
-            // FIXME: 2018/11/22 fanhl
-            // FIXME: 2018/11/22 fanhl
-            // FIXME: 2018/11/22 fanhl
+            frame.apply {
+                left = /*position * width*/horizontalScrollOffset
+                top = 0
+                right = /*(position + 1) **/ width + horizontalScrollOffset
+                bottom = height
+            }
         }
-
     }
 }
