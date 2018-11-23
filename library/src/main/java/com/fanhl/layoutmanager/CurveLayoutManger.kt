@@ -148,7 +148,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         }
 
         // 当前scroll offset状态下的显示区域
-        val displayFrame = Rect(horizontalScrollOffset, verticalScrollOffset, horizontalScrollOffset + getHorizontalSpace(), verticalScrollOffset + getVerticalSpace())
+        val displayFrame = Rect(0, 0, getHorizontalSpace(), getVerticalSpace())
 
         /*
          * 将滑出屏幕的Items回收到Recycle缓存中
@@ -169,11 +169,19 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         //重新显示需要出现在屏幕的子View
         log("recycleAndFillItems: before for")
         for (i in 0 until itemCount) {
+            // 滑动偏移值（百分比）
+            val offset = if (curve.getScrollOrientation() != VERTICAL) {
+                horizontalScrollOffset.toFloat() / getHorizontalSpace()
+            } else {
+                verticalScrollOffset.toFloat() / getVerticalSpace()
+            }
+
+            // 对应view的布局位置
+            curve.getPosition(i - offset, vector2)
+
             // 对应view的显示尺寸
             val (width, height) = allItemSize[i]
 
-            // 对应view的布局位置
-            curve.getPosition(i, vector2)
             childFrame.apply {
                 left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
                 top = (vector2.y * getVerticalSpace() - 0.5f * height).toInt()
@@ -191,10 +199,10 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
                 //将这个item布局出来
                 layoutDecorated(
                     scrap,
-                    childFrame.left - horizontalScrollOffset,
-                    childFrame.top - verticalScrollOffset,
-                    childFrame.right - horizontalScrollOffset,
-                    childFrame.bottom - verticalScrollOffset
+                    childFrame.left,
+                    childFrame.top,
+                    childFrame.right,
+                    childFrame.bottom
                 )
             }
         }
@@ -239,7 +247,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
          * @param position 第i个元素的位置
          */
         fun getPosition(
-            i: Int,
+            i: Float,
             position: Vector2
         )
     }
@@ -259,7 +267,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         override fun getScrollOrientation() = HORIZONTAL
 
         override fun getPosition(
-            i: Int,
+            i: Float,
             position: Vector2
         ) {
             position.apply {
