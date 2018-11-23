@@ -172,8 +172,10 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             // 对应view的显示尺寸
             val (width, height) = allItemSize[i]
 
-            //对应view的布局位置
-            curve.getPosition(displayFrame, horizontalScrollOffset, verticalScrollOffset, i, width, height, childFrame)
+            // 对应view的布局位置
+            curve.getPosition(i, width, height, childFrame)
+//            childFrame
+
             if (Rect.intersects(displayFrame, childFrame)) {
                 val scrap = recycler.getViewForPosition(i)
 
@@ -224,7 +226,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         @Orientation
         fun getScrollOrientation(): Int
 
-        fun canScrollHorizontally() = getScrollOrientation() == HORIZONTAL
+        fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
         /**
          * @param displayFrame 屏幕显示区域
@@ -235,9 +237,6 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
          * @param verticalScrollOffset 当前屏幕垂直偏移
          */
         fun getPosition(
-            displayFrame: Rect,
-            horizontalScrollOffset: Int,
-            verticalScrollOffset: Int,
             position: Int,
             width: Int,
             height: Int,
@@ -260,10 +259,9 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         override fun getScrollOrientation() = HORIZONTAL
 
         override fun getPosition(
-            displayFrame: Rect,
-            horizontalScrollOffset: Int, verticalScrollOffset: Int,
             position: Int,
-            width: Int, height: Int,
+            width: Int,
+            height: Int,
             frame: Rect
         ) {
             frame.apply {
