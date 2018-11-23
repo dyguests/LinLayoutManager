@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshData() {
         adapter.setNewData(
-            List(100) {
+            List(20) {
                 "$it"
             }
         )

@@ -17,6 +17,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
     private var verticalScrollOffset = 0
 
     private var totalWidth = 0
+    private var totalHeight = 0
 
     //保存所有的Item的尺寸
     private val allItemSize = SparseArray<Size>()
@@ -49,6 +50,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         detachAndScrapAttachedViews(recycler)
 
         totalWidth = 0
+        totalHeight = 0
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
 
@@ -60,7 +62,9 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val height = getDecoratedMeasuredHeight(view)
 
             totalWidth += width
+            totalHeight += height
 
+            //缓存每个item的尺寸
             allItemSize[i]?.apply {
                 this.width = width
                 this.height = height
@@ -74,6 +78,7 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         //如果所有子View的高度和没有填满RecyclerView的高度，
         // 则将高度设置为RecyclerView的高度
         totalWidth = Math.max(totalWidth, getHorizontalSpace())
+        totalHeight = Math.max(totalHeight, getVerticalSpace())
 
         recycleAndFillItems(recycler, state)
     }
@@ -103,6 +108,28 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
 
         // 平移容器内的item
         offsetChildrenHorizontal(-travel)
+
+        recycleAndFillItems(recycler, state)
+        return travel
+    }
+
+    override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+        //先detach掉所有的子View
+        detachAndScrapAttachedViews(recycler)
+
+        var travel = dy
+
+        if (verticalScrollOffset + dy < 0) {
+            travel = -verticalScrollOffset
+        } else if (verticalScrollOffset + dy > totalHeight - getVerticalSpace()) {
+            travel = totalHeight - getVerticalSpace() - verticalScrollOffset
+        }
+
+        //将水平方向的偏移量+travel
+        verticalScrollOffset += travel
+
+        // 平移容器内的item
+        offsetChildrenVertical(-travel)
 
         recycleAndFillItems(recycler, state)
         return travel
@@ -152,9 +179,9 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
                 layoutDecorated(
                     scrap,
                     childFrame.left - horizontalScrollOffset,
-                    childFrame.top,
+                    childFrame.top - verticalScrollOffset,
                     childFrame.right - horizontalScrollOffset,
-                    childFrame.bottom
+                    childFrame.bottom - verticalScrollOffset
                 )
             }
         }
@@ -234,6 +261,12 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
                 right = (position + 1) * width
                 bottom = height
             }
+//            frame.apply {
+//                left = 0
+//                top = position * height
+//                right = width
+//                bottom = (position + 1) * height
+//            }
         }
     }
 }
