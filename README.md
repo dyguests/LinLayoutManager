@@ -8,7 +8,13 @@ Some LayoutManager created by fanhl.
 
 A linear LayoutManger can scroll by any `Curves`.
 
+Some default Curve.
 
+| type | 类型 | code | sample | remark |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|   |   |   |   |   |
+|   |   |   |   |   |
 
 ## Resources:
 
