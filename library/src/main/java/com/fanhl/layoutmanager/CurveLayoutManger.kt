@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.support.annotation.IntDef
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.util.SparseArray
 import android.util.SparseBooleanArray
 
 /**
@@ -17,6 +18,8 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
 
     private var totalWidth = 0
 
+    //保存所有的Item的尺寸
+    private val allItemSize = SparseArray<Size>()
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
     private val hasAttachedItems = SparseBooleanArray()
 
@@ -57,6 +60,13 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             val height = getDecoratedMeasuredHeight(view)
 
             totalWidth += width
+
+            allItemSize[i]?.apply {
+                this.width = width
+                this.height = height
+            } ?: Size(width, height).also {
+                allItemSize.put(i, it)
+            }
 
             hasAttachedItems.put(i, false)
         }
@@ -126,16 +136,14 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
         //重新显示需要出现在屏幕的子View
         log("recycleAndFillItems: before for")
         for (i in 0 until itemCount) {
-            // 获取对应view
-            val scrap = recycler.getViewForPosition(i)
             // 对应view的显示尺寸
-            val width = getDecoratedMeasuredWidth(scrap)
-            val height = getDecoratedMeasuredHeight(scrap)
+            val (width, height) = allItemSize[i]
 
             //对应view的布局位置
             curve.getFrame(displayFrame, horizontalScrollOffset, verticalScrollOffset, i, width, height, childFrame)
-
             if (Rect.intersects(displayFrame, childFrame)) {
+                val scrap = recycler.getViewForPosition(i)
+
                 measureChildWithMargins(scrap, 0, 0)
 
                 addView(scrap)
@@ -203,6 +211,11 @@ class CurveLayoutManger : RecyclerView.LayoutManager() {
             frame: Rect
         )
     }
+
+    private data class Size(
+        var width: Int = 0,
+        var height: Int = 0
+    )
 
     /** 抛物线 */
     class Parabola : Curve {
