@@ -65,6 +65,7 @@ TODO
 - [x] CurveLayoutManager
 - [ ] CollageLayoutManager
 - [ ] ItemAnimation
+- [ ] item间的距离计算公式
 
 ## License
 

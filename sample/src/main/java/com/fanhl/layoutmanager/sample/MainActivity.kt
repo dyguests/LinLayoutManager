@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun assignViews() {
-        recycler_view.layoutManager = CurveLayoutManger(Slash())
+        recycler_view.layoutManager = CurveLayoutManger()
     }
 
     private fun initData() {
