@@ -91,11 +91,11 @@ class CurveLayoutManger(
     }
 
     override fun canScrollHorizontally(): Boolean {
-        return curve.getScrollOrientation() != VERTICAL
+        return curve.canScrollHorizontally()
     }
 
     override fun canScrollVertically(): Boolean {
-        return curve.getScrollOrientation() == VERTICAL
+        return curve.canScrollVertically()
     }
 
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
@@ -188,7 +188,7 @@ class CurveLayoutManger(
         var indexOffset = 0f
         for (index in 0 until itemCount) {
             // 滑动偏移值（百分比）
-            val scrollOffset = if (curve.getScrollOrientation() != VERTICAL) {
+            val scrollOffset = if (curve.canScrollHorizontally()) {
                 horizontalScrollOffset.toFloat() / getHorizontalSpace()
             } else {
                 verticalScrollOffset.toFloat() / getVerticalSpace()
@@ -227,6 +227,7 @@ class CurveLayoutManger(
 
             //累积偏移值
             indexOffset += width.toFloat() / getHorizontalSpace()
+            indexOffset += curve.getIndexOffset(width.toFloat() / getHorizontalSpace(), height.toFloat() / getVerticalSpace())
         }
         log("recycleAndFillItems: after for")
     }
@@ -263,17 +264,31 @@ class CurveLayoutManger(
             return HORIZONTAL
         }
 
-//        fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
-//        fun canScrollVertically() = getScrollOrientation() == VERTICAL
+        fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
+        fun canScrollVertically() = getScrollOrientation() == VERTICAL
 
         /**
-         * @param i 当前元素的位置(in itemCount)，当前child的宽
+         * @param i index 当前元素的位置(in itemCount)，当前child的宽
          * @param position 第i个元素的位置
          */
         fun getInterpolation(
             i: Float,
             position: Vector2
         )
+
+        /**
+         * 获取两个元素之间的间距
+         *
+         * 注：TODO 目前是根据 第n个元素的width/height来计算第n+1个元素与第n个元素的偏移值
+         * TODO 之后可能要改成 根据两个元素的宽高来计算偏移值
+         */
+        fun getIndexOffset(width: Float, height: Float): Float {
+            return if (canScrollHorizontally()) {
+                width
+            } else {
+                height
+            }
+        }
     }
 
     private data class Size(
