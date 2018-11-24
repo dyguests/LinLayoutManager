@@ -1,5 +1,7 @@
 # LinLayoutManager
 
+[![](https://jitpack.io/v/dyguests/LinLayoutManager.svg)](https://jitpack.io/#dyguests/LinLayoutManager) [kotlin]
+
 Some LayoutManager created by fanhl.
 
 ## LayoutManagers
@@ -23,6 +25,21 @@ Implements CurveLayoutManger.Curve.
 That's it.
 
 ## Usage
+
+1. Add it in your root build.gradle at the end of repositories:
+
+        allprojects {
+            repositories {
+                ...
+                maven { url 'https://jitpack.io' }
+            }
+        }
+
+2. Add the dependency in your module build.gradle:
+
+        dependencies {
+                implementation 'com.github.dyguests:LinLayoutManager:x.y.z'
+        }
 
 ### Step1. Create your curve like this:
 
