@@ -13,7 +13,7 @@ A linear LayoutManger can scroll by any `Curves`.
 | type | 类型 | code | sample | params |
 |---|---|---|---|---|
 | Parabola | 抛物线 | x=i+0.5; y=0.2i^2+0.5 | ![](./graphics/parabola.gif)  | focus |
-| Slash | 斜线 | x=i+0.5;y=slope*i+0.5 | TODO | slope |
+| Slash | 斜线 | x=i+0.5;y=slope*i+0.5 | ![](./graphics/slash.gif) | slope |
 |   |   |   |   |   |
 
 #### Custom your curve.
