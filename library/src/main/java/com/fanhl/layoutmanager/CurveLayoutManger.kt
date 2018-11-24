@@ -169,19 +169,22 @@ class CurveLayoutManger(
 
         //重新显示需要出现在屏幕的子View
         log("recycleAndFillItems: before for")
-        for (i in 0 until itemCount) {
+        //存放每个元素的偏移值（百分比）
+        var indexOffset = 0f
+        for (index in 0 until itemCount) {
             // 滑动偏移值（百分比）
-            val offset = if (curve.getScrollOrientation() != VERTICAL) {
+            val scrollOffset = if (curve.getScrollOrientation() != VERTICAL) {
                 horizontalScrollOffset.toFloat() / getHorizontalSpace()
             } else {
                 verticalScrollOffset.toFloat() / getVerticalSpace()
             }
 
-            // 对应view的布局位置
-            curve.getInterpolation(i - offset, vector2)
-
             // 对应view的显示尺寸
-            val (width, height) = allItemSize[i]
+            val (width, height) = allItemSize[index]
+
+            // 对应view的布局位置
+            curve.getInterpolation(indexOffset - scrollOffset, vector2)
+            log("recycleAndFillItems: offset: indexOffset:$indexOffset scrollOffset:$scrollOffset")
 
             childFrame.apply {
                 left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
@@ -191,7 +194,7 @@ class CurveLayoutManger(
             }
 
             if (Rect.intersects(displayFrame, childFrame)) {
-                val scrap = recycler.getViewForPosition(i)
+                val scrap = recycler.getViewForPosition(index)
 
                 measureChildWithMargins(scrap, 0, 0)
 
@@ -206,6 +209,9 @@ class CurveLayoutManger(
                     childFrame.bottom
                 )
             }
+
+            //累积偏移值
+            indexOffset += width.toFloat() / getHorizontalSpace()
         }
         log("recycleAndFillItems: after for")
     }

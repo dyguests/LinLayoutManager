@@ -44,7 +44,7 @@ That's it.
 
 TODO
 
-## Resources:
+## Resources(资料):
 
  [创建一个 RecyclerView LayoutManager – Part 1](https://github.com/hehonghui/android-tech-frontier/blob/master/issue-9/%E5%88%9B%E5%BB%BA-RecyclerView-LayoutManager-Part-1.md)
 
@@ -57,6 +57,8 @@ TODO
 [Zoom central image recycler view](https://stackoverflow.com/questions/35309710/zoom-central-image-recycler-view/35311728#35311728)
 
 [Recycler view - resizing item view while scrolling (for carousel like effect)](https://stackoverflow.com/questions/41307578/recycler-view-resizing-item-view-while-scrolling-for-carousel-like-effect)
+
+[danylovolokh/LondonEyeLayoutManager](https://github.com/danylovolokh/LondonEyeLayoutManager)
 
 ## TODO
 

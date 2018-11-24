@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    class MainAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_view) {
+    class MainAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_view2) {
         override fun convert(helper: BaseViewHolder?, item: String?) {
             helper?.itemView?.apply {
                 tv_1.text = item
