@@ -41,6 +41,7 @@ class CurveLayoutManger(
      * 用于参考坐标计算
      */
     private val vector2 = Vector2()
+    private val nextVector2 = Vector2()
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
@@ -72,15 +73,32 @@ class CurveLayoutManger(
             val width = getDecoratedMeasuredWidth(view)
             val height = getDecoratedMeasuredHeight(view)
 
-            totalWidth += width
-            totalHeight += height
-
             //缓存每个item的尺寸
             allItemSize[i]?.apply {
                 this.width = width
                 this.height = height
             } ?: Size(width, height).also {
                 allItemSize.put(i, it)
+            }
+
+            totalWidth += width
+            totalHeight += height
+
+            //累积总totalDistance
+            nextVector2.apply {
+                x = width.toFloat() / getHorizontalSpace()
+                y = height.toFloat() / getVerticalSpace()
+            }
+            if (i > 0) {
+                totalDistance += (curve.getItemSpacing(vector2, nextVector2) * (if (curve.canScrollHorizontally()) {
+                    getHorizontalSpace()
+                } else {
+                    getVerticalSpace()
+                })).toInt()
+            }
+            vector2.apply {
+                x = nextVector2.x
+                y = nextVector2.y
             }
 
             hasAttachedItems.put(i, false)
@@ -131,8 +149,8 @@ class CurveLayoutManger(
             } else {
                 0
             }
-            if (horizontalScrollOffset + dx > (totalWidth - notScrollWidth)) {
-                travel = (totalWidth - notScrollWidth - horizontalScrollOffset)
+            if (horizontalScrollOffset + dx > totalDistance) {
+                travel = totalDistance - horizontalScrollOffset
             }
         }
 
@@ -154,8 +172,8 @@ class CurveLayoutManger(
 
         if (verticalScrollOffset + dy < 0) {
             travel = -verticalScrollOffset
-        } else if (verticalScrollOffset + dy > totalHeight - getVerticalSpace()) {
-            travel = totalHeight - getVerticalSpace() - verticalScrollOffset
+        } else if (verticalScrollOffset + dy > totalDistance) {
+            travel = totalDistance - verticalScrollOffset
         }
 
         //将水平方向的偏移量+travel
@@ -195,6 +213,19 @@ class CurveLayoutManger(
         //存放每个元素的偏移值（百分比）
         var indexOffset = 0f
         for (index in 0 until itemCount) {
+            //累积偏移值
+            nextVector2.apply {
+                x = width.toFloat() / getHorizontalSpace()
+                y = height.toFloat() / getVerticalSpace()
+            }
+            if (index > 0) {
+                indexOffset += curve.getItemSpacing(vector2, nextVector2)
+            }
+            vector2.apply {
+                x = nextVector2.x
+                y = nextVector2.y
+            }
+
             // 滑动偏移值（百分比）
             val scrollOffset = if (curve.canScrollHorizontally()) {
                 horizontalScrollOffset.toFloat() / getHorizontalSpace()
@@ -232,9 +263,6 @@ class CurveLayoutManger(
                         childFrame.bottom
                 )
             }
-
-            //累积偏移值
-            indexOffset += curve.getIndexOffset(width.toFloat() / getHorizontalSpace(), height.toFloat() / getVerticalSpace())
         }
         log("recycleAndFillItems: after for")
     }
@@ -285,15 +313,12 @@ class CurveLayoutManger(
 
         /**
          * 获取两个元素之间的间距
-         *
-         * 注：TODO 目前是根据 第n个元素的width/height来计算第n+1个元素与第n个元素的偏移值
-         * TODO 之后可能要改成 根据两个元素的宽高来计算偏移值
          */
-        fun getIndexOffset(width: Float, height: Float): Float {
+        fun getItemSpacing(item1: Vector2, item2: Vector2): Float {
             return if (canScrollHorizontally()) {
-                width
+                item1.x / 2 + item2.x / 2
             } else {
-                height
+                item1.y / 2 + item2.y / 2
             }
         }
     }
