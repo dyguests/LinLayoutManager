@@ -18,9 +18,29 @@ A linear LayoutManger can scroll by any `Curves`.
 
 #### Custom your curve.
 
-TODO 等会写
+Implements CurveLayoutManger.Curve.
+
+That's it.
 
 ## Usage
+
+### Step1. Create your curve like this:
+
+    /** 抛物线 */
+    class Parabola(
+        private val focus: Float = .2f
+    ) : CurveLayoutManger.Curve {
+        override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
+            position.x = i + 0.5f
+            position.y = focus * i * i + 0.5f
+        }
+    }
+
+### Step1. Set layoutManger like this:
+
+    recycler_view.layoutManager = CurveLayoutManger(Slash())
+
+## Import
 
 TODO
 

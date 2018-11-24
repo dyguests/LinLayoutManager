@@ -11,9 +11,7 @@ class Slash(
     private val slope: Float = .2f
 ) : CurveLayoutManger.Curve {
     override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
-        position.apply {
-            x = i + 0.5f
-            y = slope * i + 0.5f
-        }
+        position.x = i + 0.5f
+        position.y = slope * i + 0.5f
     }
 }
