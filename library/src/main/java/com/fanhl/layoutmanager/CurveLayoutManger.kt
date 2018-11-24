@@ -106,8 +106,23 @@ class CurveLayoutManger(
 
         if (horizontalScrollOffset + dx < 0) {
             travel = -horizontalScrollOffset
-        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
-            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
+//        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
+//            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
+//        }
+        }
+        // FIXME: 2018/11/24 fanhl 另外还需要一种scroll方式用于贴边
+
+        //这种scroll的区域中 居中，第一个元素可以居中，最后一个元素也可以居中
+        else {
+            //这个值是不能滚动的区域宽度。比如第一个元素的左半部分，和最后一个元素的右边部分
+            val notScrollWidth = if (allItemSize.size() > 0) {
+                (allItemSize.get(0).width.toFloat() / 2 + allItemSize[itemCount - 1].width.toFloat() / 2).toInt()
+            } else {
+                0
+            }
+            if (horizontalScrollOffset + dx > (totalWidth - notScrollWidth)) {
+                travel = (totalWidth - notScrollWidth - horizontalScrollOffset)
+            }
         }
 
         //将水平方向的偏移量+travel
