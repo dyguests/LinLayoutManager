@@ -31,9 +31,11 @@ class MainActivity : AppCompatActivity() {
         refreshData()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.clear()
+        curves.forEachIndexed { index, curve ->
+            menu?.add(0, Menu.FIRST + index, Menu.NONE, curve::class.java.simpleName)
+        }
         return true
     }
 
