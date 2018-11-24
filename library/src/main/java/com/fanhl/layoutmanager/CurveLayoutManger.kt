@@ -106,6 +106,8 @@ class CurveLayoutManger(
             bottom = getVerticalSpace()
         }
 
+        curve.ratio = getHorizontalSpace().toFloat() / getVerticalSpace()
+
         recycleAndFillItems(recycler, state)
     }
 
@@ -270,8 +272,18 @@ class CurveLayoutManger(
     @IntDef(HORIZONTAL, VERTICAL)
     annotation class Orientation
 
-    /** layout用的曲线 */
-    interface Curve {
+    /**
+     * layout用的曲线
+     */
+    abstract class Curve {
+        /**
+         * 宽高比
+         */
+        var ratio = 1f
+
+        /**
+         * 滚动方向
+         */
         @Orientation
         fun getScrollOrientation(): Int {
             return HORIZONTAL
@@ -284,7 +296,7 @@ class CurveLayoutManger(
          * @param i index 当前元素的位置(in itemCount)，当前child的宽
          * @param position 第i个元素的位置
          */
-        fun getInterpolation(
+        abstract fun getInterpolation(
                 i: Float,
                 position: Vector2
         )
