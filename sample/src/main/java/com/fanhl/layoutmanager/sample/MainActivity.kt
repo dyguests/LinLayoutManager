@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        curves.getOrNull(item.itemId - Menu.FIRST)?.let { recycler_view.layoutManager = CurveLayoutManger(it) }
         return super.onOptionsItemSelected(item)
     }
 
