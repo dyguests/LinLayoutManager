@@ -226,7 +226,6 @@ class CurveLayoutManger(
             }
 
             //累积偏移值
-            indexOffset += width.toFloat() / getHorizontalSpace()
             indexOffset += curve.getIndexOffset(width.toFloat() / getHorizontalSpace(), height.toFloat() / getVerticalSpace())
         }
         log("recycleAndFillItems: after for")
