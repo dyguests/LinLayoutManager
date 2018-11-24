@@ -285,7 +285,7 @@ class CurveLayoutManger(
          * 滚动方向
          */
         @Orientation
-        fun getScrollOrientation(): Int {
+        open   fun getScrollOrientation(): Int {
             return HORIZONTAL
         }
 
@@ -304,7 +304,7 @@ class CurveLayoutManger(
         /**
          * 获取两个元素之间的间距
          */
-        fun getItemSpacing(size1: Vector2, size2: Vector2): Float {
+      open  fun getItemSpacing(size1: Vector2, size2: Vector2): Float {
             return if (canScrollHorizontally()) {
                 size1.x / 2 + size2.x / 2
             } else {

@@ -9,7 +9,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.fanhl.layoutmanager.CurveLayoutManger
 import com.fanhl.layoutmanager.curve.Parabola
 import com.fanhl.layoutmanager.curve.Slash
-import com.fanhl.layoutmanager.sample.curve.FerrisWheel
+import com.fanhl.layoutmanager.curve.FerrisWheel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_view.view.*
 

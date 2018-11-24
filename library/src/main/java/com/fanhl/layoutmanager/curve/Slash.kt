@@ -9,7 +9,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  */
 class Slash(
         private val slope: Float = .2f
-) : CurveLayoutManger.Curve {
+) : CurveLayoutManger.Curve() {
     override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
         position.x = i + 0.5f
         position.y = slope * i + 0.5f
