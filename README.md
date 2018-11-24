@@ -16,7 +16,7 @@ A linear LayoutManger can scroll by any `Curves`.
 |---|---|---|---|---|
 | Parabola | 抛物线 | x=i+0.5; y=0.2i^2+0.5 | ![](./graphics/parabola.gif)  | focus |
 | Slash | 斜线 | x=i+0.5;y=slope*i+0.5 | ![](./graphics/slash.gif) | slope |
-|   |   |   |   |   |
+| FerrisWheel | 摩天轮 |   | TODO |   |
 
 #### Custom your curve.
 
