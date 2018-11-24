@@ -14,13 +14,12 @@ import com.fanhl.layoutmanager.curve.Parabola
  * @author fanhl
  */
 class CurveLayoutManger(
-        var curve: Curve = Parabola()
+        private var curve: Curve = Parabola()
 ) : RecyclerView.LayoutManager() {
     private var horizontalScrollOffset = 0
     private var verticalScrollOffset = 0
 
-    private var totalWidth = 0
-    private var totalHeight = 0
+    /** 总共可以偏移的距离 */
     private var totalDistance = 0
 
     // 当前scroll offset状态下的显示区域
@@ -41,6 +40,7 @@ class CurveLayoutManger(
      * 用于参考坐标计算
      */
     private val vector2 = Vector2()
+    private val lastVector2 = Vector2()
     private val nextVector2 = Vector2()
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
@@ -60,8 +60,6 @@ class CurveLayoutManger(
         //在布局之前，将所有的子View先Detach掉，放入到Scrap缓存中
         detachAndScrapAttachedViews(recycler)
 
-        totalWidth = 0
-        totalHeight = 0
         totalDistance = 0
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
@@ -81,33 +79,25 @@ class CurveLayoutManger(
                 allItemSize.put(i, it)
             }
 
-            totalWidth += width
-            totalHeight += height
-
             //累积总totalDistance
             nextVector2.apply {
                 x = width.toFloat() / getHorizontalSpace()
                 y = height.toFloat() / getVerticalSpace()
             }
             if (i > 0) {
-                totalDistance += (curve.getItemSpacing(vector2, nextVector2) * (if (curve.canScrollHorizontally()) {
+                totalDistance += (curve.getItemSpacing(lastVector2, nextVector2) * (if (curve.canScrollHorizontally()) {
                     getHorizontalSpace()
                 } else {
                     getVerticalSpace()
                 })).toInt()
             }
-            vector2.apply {
+            lastVector2.apply {
                 x = nextVector2.x
                 y = nextVector2.y
             }
 
             hasAttachedItems.put(i, false)
         }
-
-        //如果所有子View的高度和没有填满RecyclerView的高度，
-        // 则将高度设置为RecyclerView的高度
-        totalWidth = Math.max(totalWidth, getHorizontalSpace())
-        totalHeight = Math.max(totalHeight, getVerticalSpace())
 
         displayFrame.apply {
             //            left=0
@@ -135,23 +125,11 @@ class CurveLayoutManger(
 
         if (horizontalScrollOffset + dx < 0) {
             travel = -horizontalScrollOffset
-//        } else if (horizontalScrollOffset + dx > totalWidth - getHorizontalSpace()) {
-//            travel = totalWidth - getHorizontalSpace() - horizontalScrollOffset
-//        }
         }
         // FIXME: 2018/11/24 fanhl 另外还需要一种scroll方式用于贴边
-
         //这种scroll的区域中 居中，第一个元素可以居中，最后一个元素也可以居中
-        else {
-            //这个值是不能滚动的区域宽度。比如第一个元素的左半部分，和最后一个元素的右边部分
-            val notScrollWidth = if (allItemSize.size() > 0) {
-                (allItemSize.get(0).width.toFloat() / 2 + allItemSize[itemCount - 1].width.toFloat() / 2).toInt()
-            } else {
-                0
-            }
-            if (horizontalScrollOffset + dx > totalDistance) {
-                travel = totalDistance - horizontalScrollOffset
-            }
+        else if (horizontalScrollOffset + dx > totalDistance) {
+            travel = totalDistance - horizontalScrollOffset
         }
 
         //将水平方向的偏移量+travel
@@ -209,19 +187,22 @@ class CurveLayoutManger(
         }
 
         //重新显示需要出现在屏幕的子View
-        log("recycleAndFillItems: before for")
+//        log("recycleAndFillItems: before for")
         //存放每个元素的偏移值（百分比）
         var indexOffset = 0f
         for (index in 0 until itemCount) {
+            // 对应view的显示尺寸
+            val (width, height) = allItemSize[index]
+
             //累积偏移值
             nextVector2.apply {
                 x = width.toFloat() / getHorizontalSpace()
                 y = height.toFloat() / getVerticalSpace()
             }
             if (index > 0) {
-                indexOffset += curve.getItemSpacing(vector2, nextVector2)
+                indexOffset += curve.getItemSpacing(lastVector2, nextVector2)
             }
-            vector2.apply {
+            lastVector2.apply {
                 x = nextVector2.x
                 y = nextVector2.y
             }
@@ -233,12 +214,9 @@ class CurveLayoutManger(
                 verticalScrollOffset.toFloat() / getVerticalSpace()
             }
 
-            // 对应view的显示尺寸
-            val (width, height) = allItemSize[index]
-
             // 对应view的布局位置
             curve.getInterpolation(indexOffset - scrollOffset, vector2)
-            log("recycleAndFillItems: offset: indexOffset:$indexOffset scrollOffset:$scrollOffset")
+//            log("recycleAndFillItems: offset: indexOffset:$indexOffset scrollOffset:$scrollOffset")
 
             childFrame.apply {
                 left = (vector2.x * getHorizontalSpace() - 0.5f * width).toInt()
@@ -264,7 +242,7 @@ class CurveLayoutManger(
                 )
             }
         }
-        log("recycleAndFillItems: after for")
+//        log("recycleAndFillItems: after for")
     }
 
     private fun getHorizontalSpace(): Int {
@@ -314,11 +292,11 @@ class CurveLayoutManger(
         /**
          * 获取两个元素之间的间距
          */
-        fun getItemSpacing(item1: Vector2, item2: Vector2): Float {
+        fun getItemSpacing(size1: Vector2, size2: Vector2): Float {
             return if (canScrollHorizontally()) {
-                item1.x / 2 + item2.x / 2
+                size1.x / 2 + size2.x / 2
             } else {
-                item1.y / 2 + item2.y / 2
+                size1.y / 2 + size2.y / 2
             }
         }
     }
