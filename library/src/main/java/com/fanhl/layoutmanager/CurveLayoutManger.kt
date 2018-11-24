@@ -14,14 +14,17 @@ import com.fanhl.layoutmanager.curve.Parabola
  * @author fanhl
  */
 class CurveLayoutManger(
-    var curve: Curve = Parabola()
+        var curve: Curve = Parabola()
 ) : RecyclerView.LayoutManager() {
     private var horizontalScrollOffset = 0
     private var verticalScrollOffset = 0
 
     private var totalWidth = 0
     private var totalHeight = 0
+    private var totalDistance = 0
 
+    // 当前scroll offset状态下的显示区域
+    private val displayFrame = Rect()
     //保存所有的Item的尺寸
     private val allItemSize = SparseArray<Size>()
     //记录Item是否出现过屏幕且还没有回收。true表示出现过屏幕上，并且还没被回收
@@ -41,8 +44,8 @@ class CurveLayoutManger(
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
-            RecyclerView.LayoutParams.WRAP_CONTENT,
-            RecyclerView.LayoutParams.WRAP_CONTENT
+                RecyclerView.LayoutParams.WRAP_CONTENT,
+                RecyclerView.LayoutParams.WRAP_CONTENT
         )
     }
 
@@ -58,6 +61,7 @@ class CurveLayoutManger(
 
         totalWidth = 0
         totalHeight = 0
+        totalDistance = 0
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
 
@@ -86,6 +90,13 @@ class CurveLayoutManger(
         // 则将高度设置为RecyclerView的高度
         totalWidth = Math.max(totalWidth, getHorizontalSpace())
         totalHeight = Math.max(totalHeight, getVerticalSpace())
+
+        displayFrame.apply {
+            //            left=0
+            //            top=0
+            right = getHorizontalSpace()
+            bottom = getVerticalSpace()
+        }
 
         recycleAndFillItems(recycler, state)
     }
@@ -163,9 +174,6 @@ class CurveLayoutManger(
             return
         }
 
-        // 当前scroll offset状态下的显示区域
-        val displayFrame = Rect(0, 0, getHorizontalSpace(), getVerticalSpace())
-
         /*
          * 将滑出屏幕的Items回收到Recycle缓存中
          */
@@ -217,11 +225,11 @@ class CurveLayoutManger(
 
                 //将这个item布局出来
                 layoutDecorated(
-                    scrap,
-                    childFrame.left,
-                    childFrame.top,
-                    childFrame.right,
-                    childFrame.bottom
+                        scrap,
+                        childFrame.left,
+                        childFrame.top,
+                        childFrame.right,
+                        childFrame.bottom
                 )
             }
 
@@ -271,8 +279,8 @@ class CurveLayoutManger(
          * @param position 第i个元素的位置
          */
         fun getInterpolation(
-            i: Float,
-            position: Vector2
+                i: Float,
+                position: Vector2
         )
 
         /**
@@ -291,12 +299,12 @@ class CurveLayoutManger(
     }
 
     private data class Size(
-        var width: Int = 0,
-        var height: Int = 0
+            var width: Int = 0,
+            var height: Int = 0
     )
 
     data class Vector2(
-        var x: Float = 0f,
-        var y: Float = 0f
+            var x: Float = 0f,
+            var y: Float = 0f
     )
 }
