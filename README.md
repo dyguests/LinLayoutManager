@@ -41,6 +41,8 @@ That's it.
                 implementation 'com.github.dyguests:LinLayoutManager:x.y.z'
         }
 
+## Import
+
 ### Step1. Create your curve like this:
 
     /** 抛物线 */
@@ -56,10 +58,6 @@ That's it.
 ### Step1. Set layoutManger like this:
 
     recycler_view.layoutManager = CurveLayoutManger(Slash())
-
-## Import
-
-TODO
 
 ## Resources(资料):
 
