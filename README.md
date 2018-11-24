@@ -1,6 +1,6 @@
 # LinLayoutManager
 
-[![](https://jitpack.io/v/dyguests/LinLayoutManager.svg)](https://jitpack.io/#dyguests/LinLayoutManager) [kotlin]
+[![](https://jitpack.io/v/dyguests/LinLayoutManager.svg)](https://jitpack.io/#dyguests/LinLayoutManager) ![kotlin](https://img.shields.io/badge/lanuage-kotlin-brightgreen.svg)
 
 Some LayoutManager created by fanhl.
 
