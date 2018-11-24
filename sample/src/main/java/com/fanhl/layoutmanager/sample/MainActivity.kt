@@ -18,7 +18,10 @@ class MainActivity : AppCompatActivity() {
     private val curves by lazy {
         listOf(
                 Parabola(),
-                Slash()
+                Parabola(1f),
+                Parabola(-.5f),
+                Slash(),
+                Slash(-1f)
         )
     }
 
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
         curves.forEachIndexed { index, curve ->
-            menu?.add(0, Menu.FIRST + index, Menu.NONE, curve::class.java.simpleName)
+            menu?.add(0, Menu.FIRST + index, Menu.NONE, curve.toString())
         }
         return true
     }

@@ -10,4 +10,8 @@ class Parabola(
         position.x = i + 0.5f
         position.y = focus * i * i + 0.5f
     }
+
+    override fun toString(): String {
+        return "Parabola(focus:$focus)"
+    }
 }
