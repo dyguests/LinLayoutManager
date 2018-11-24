@@ -26,23 +26,6 @@ That's it.
 
 ## Usage
 
-1. Add it in your root build.gradle at the end of repositories:
-
-        allprojects {
-            repositories {
-                ...
-                maven { url 'https://jitpack.io' }
-            }
-        }
-
-2. Add the dependency in your module build.gradle:
-
-        dependencies {
-                implementation 'com.github.dyguests:LinLayoutManager:x.y.z'
-        }
-
-## Import
-
 ### Step1. Create your curve like this:
 
     /** 抛物线 */
@@ -58,6 +41,23 @@ That's it.
 ### Step1. Set layoutManger like this:
 
     recycler_view.layoutManager = CurveLayoutManger(Slash())
+
+## Import
+
+1. Add it in your root build.gradle at the end of repositories:
+
+        allprojects {
+            repositories {
+                ...
+                maven { url 'https://jitpack.io' }
+            }
+        }
+
+2. Add the dependency in your module build.gradle:
+
+        dependencies {
+                implementation 'com.github.dyguests:LinLayoutManager:x.y.z'
+        }
 
 ## Resources(资料):
 
