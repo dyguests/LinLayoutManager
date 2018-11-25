@@ -328,6 +328,16 @@ class CurveLayoutManger(
                 size1.y / 2 + size2.y / 2
             }
         }
+
+        /**
+         * 滚动的起点位置
+         */
+        open fun getStartOffset(size: Vector2) = 0f
+
+        /**
+         * 滚动的终点位置
+         */
+        open fun getEndOffset(size: Vector2) = 0f
     }
 
     private data class Size(
