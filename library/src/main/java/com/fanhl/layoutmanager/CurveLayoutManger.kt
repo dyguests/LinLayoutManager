@@ -82,17 +82,21 @@ class CurveLayoutManger(
                 allItemSize.put(i, it)
             }
 
-            //累积总totalDistance
+            //当前点信息
             nextVector2.apply {
                 x = width.toFloat() / getHorizontalSpace()
                 y = height.toFloat() / getVerticalSpace()
             }
+
+            if (i == 0) {
+                totalDistance += (curve.getStartOffset(nextVector2) * getUnitSpace()).toInt()
+            } else if (i == itemCount - 1) {
+                totalDistance += (curve.getEndOffset(nextVector2) * getUnitSpace()).toInt()
+            }
+
+            //累积总totalDistance
             if (i > 0) {
-                totalDistance += (curve.getItemSpacing(lastVector2, nextVector2) * (if (curve.canScrollHorizontally()) {
-                    getHorizontalSpace()
-                } else {
-                    getVerticalSpace()
-                })).toInt()
+                totalDistance += (curve.getItemSpacing(lastVector2, nextVector2) * getUnitSpace()).toInt()
             }
             lastVector2.apply {
                 x = nextVector2.x
@@ -204,7 +208,9 @@ class CurveLayoutManger(
                 x = width.toFloat() / getHorizontalSpace()
                 y = height.toFloat() / getVerticalSpace()
             }
-            if (index > 0) {
+            if (index == 0) {
+                indexOffset += curve.getStartOffset(nextVector2)
+            } else if (index > 0) {
                 indexOffset += curve.getItemSpacing(lastVector2, nextVector2)
             }
             lastVector2.apply {
@@ -248,6 +254,17 @@ class CurveLayoutManger(
             }
         }
 //        log("recycleAndFillItems: after for")
+    }
+
+    /**
+     * 获取单屏滚动距离
+     */
+    private fun getUnitSpace(): Int {
+        return (if (curve.canScrollHorizontally()) {
+            getHorizontalSpace()
+        } else {
+            getVerticalSpace()
+        })
     }
 
     private fun getHorizontalSpace(): Int {
