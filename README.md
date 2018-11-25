@@ -20,6 +20,8 @@ A linear LayoutManger can scroll by any `Curves`.
 
 #### Custom your curve.
 
+![](./graphics/tutorial/tutorial_5.gif)
+
 **[See Custom Tutorial.](README_CustomTutorial.md)**
 
 ## Usage
