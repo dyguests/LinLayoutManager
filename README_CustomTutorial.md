@@ -25,3 +25,4 @@ From right-up coordinate System to right-down coordinate System.
 ## Step3. Set init offset.
 
 The first item should be center of screen, it means t=0.5 not t=0.
+
