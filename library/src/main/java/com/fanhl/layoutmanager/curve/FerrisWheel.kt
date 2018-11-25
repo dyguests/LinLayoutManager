@@ -39,17 +39,12 @@ class FerrisWheel : CurveLayoutManger.Curve() {
     }
 
     override fun getItemSpacing(size1: CurveLayoutManger.Vector2, size2: CurveLayoutManger.Vector2): Float {
-        return spacingToRadian(getRadius(size1) + getRadius(size2))
+        val sapcing = Math.sqrt(((size1.x + size2.x) * (size1.x + size2.x) + (size1.y + size2.y) * (size1.y + size2.y) / ratio / ratio).toDouble()) / 2
+        return Math.acos(((2 * radius * radius / ratio - sapcing * sapcing) * ratio / 2 / radius / radius)).toFloat()
     }
 
     override fun toString(): String {
         return "FerrisWheel(center:(${center.x},${center.y}))"
-    }
-
-    private fun getRadius(size: CurveLayoutManger.Vector2) = (Math.sqrt((size.x * size.x + size.y * size.y).toDouble()) / 2).toFloat()
-
-    private fun spacingToRadian(spacing: Float): Float {
-        return Math.acos(((2 * radius * radius - spacing * spacing) / 2 / radius / radius).toDouble()).toFloat()
     }
 
     private fun updateRadius() {
