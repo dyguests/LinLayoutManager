@@ -280,17 +280,31 @@ class CurveLayoutManger(
          * 宽高比
          */
         var ratio = 1f
+            set(value) {
+                if (field == value) {
+                    return
+                }
+                field = value
+                onRatioChanged()
+            }
 
         /**
          * 滚动方向
          */
         @Orientation
-        open   fun getScrollOrientation(): Int {
+        open fun getScrollOrientation(): Int {
             return HORIZONTAL
         }
 
         fun canScrollHorizontally() = getScrollOrientation() != VERTICAL
+
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
+
+        /**
+         * FIXME 这个方法好久，之后改
+         */
+        open fun onRatioChanged() {
+        }
 
         /**
          * @param i index 当前元素的位置(in itemCount)，当前child的宽
@@ -304,7 +318,7 @@ class CurveLayoutManger(
         /**
          * 获取两个元素之间的间距
          */
-      open  fun getItemSpacing(size1: Vector2, size2: Vector2): Float {
+        open fun getItemSpacing(size1: Vector2, size2: Vector2): Float {
             return if (canScrollHorizontally()) {
                 size1.x / 2 + size2.x / 2
             } else {
