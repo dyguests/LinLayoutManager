@@ -44,6 +44,18 @@ class ACurve : CurveLayoutManger.Curve() {
         }
     }
 
+    override fun getItemSpacing(size1: CurveLayoutManger.Vector2, size2: CurveLayoutManger.Vector2): Float {
+        return .1f
+    }
+
+    override fun getStartOffset(size: CurveLayoutManger.Vector2): Float {
+        return .5f
+    }
+
+    override fun getEndOffset(size: CurveLayoutManger.Vector2): Float {
+        return .5f
+    }
+
     /**
      * This function calculates the binomial factor (n k). It is needed further in the Bézier curve calculations.
      */
