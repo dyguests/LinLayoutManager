@@ -60,6 +60,9 @@ class CurveLayoutManger(
         //在布局之前，将所有的子View先Detach掉，放入到Scrap缓存中
         detachAndScrapAttachedViews(recycler)
 
+        //先更新上宽比
+        curve.ratio = getHorizontalSpace().toFloat() / getVerticalSpace()
+
         totalDistance = 0
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
@@ -106,7 +109,7 @@ class CurveLayoutManger(
             bottom = getVerticalSpace()
         }
 
-        curve.ratio = getHorizontalSpace().toFloat() / getVerticalSpace()
+//        log("totalDistance$:$totalDistance totalOffset:${totalDistance.toFloat() / getHorizontalSpace()}")
 
         recycleAndFillItems(recycler, state)
     }
@@ -301,7 +304,7 @@ class CurveLayoutManger(
         fun canScrollVertically() = getScrollOrientation() == VERTICAL
 
         /**
-         * FIXME 这个方法好久，之后改
+         * This method will be called at CurveLayoutManger::onLayoutChildren
          */
         open fun onRatioChanged() {
         }
