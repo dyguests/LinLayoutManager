@@ -32,13 +32,15 @@ class ACurve : CurveLayoutManger.Curve() {
 
     private val N = factorials.size - 1
 
-    override fun getInterpolation(t: Float, position: CurveLayoutManger.Vector2) {
+    override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
         // x=(b(t,0,x_1)+b(t,1,x_2)+b(t,2,x_3)+b(t,3,x_4)+b(t,4,x_5)+b(t,5,x_6)+b(t,6,x_7)+b(t,7,x_8)+b(t,8,x_9)+b(t,9,x_{10})
         // y=b(t,0,y_1)+b(t,1,y_2)+b(t,2,y_3)+b(t,3,y_4)+b(t,4,y_5)+b(t,5,y_6)+b(t,6,y_7)+b(t,7,y_8)+b(t,8,y_9)+b(t,9,y_{10}))
 
+        val t = i + .5f
+
         position.apply {
-            x = points.asSequence().mapIndexed { index, vector2 -> b(t, index, vector2.x) }.sum()
-            y = 1f - points.asSequence().mapIndexed { index, vector2 -> b(t, index, vector2.y) }.sum()
+            x = points.asSequence().mapIndexed { index, vector2 -> b(t, index + 1, vector2.x) }.sum()
+            y = 1 - points.asSequence().mapIndexed { index, vector2 -> b(t, index + 1, vector2.y) }.sum()
         }
     }
 

@@ -20,5 +20,8 @@ run App:
 
 From right-up coordinate System to right-down coordinate System.
 
-`y = 1f - points.asSequence().mapIndexed { index, vector2 -> b(t, index, vector2.y) }.sum()`
+`y = 1 - points.asSequence().mapIndexed { index, vector2 -> b(t, index + 1, vector2.y) }.sum()`
 
+## Step3. Set init offset.
+
+The first item should be center of screen, it means t=0.5 not t=0.
