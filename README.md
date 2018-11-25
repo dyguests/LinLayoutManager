@@ -22,7 +22,7 @@ A linear LayoutManger can scroll by any `Curves`.
 
 Implements CurveLayoutManger.Curve.
 
-TODO.
+[See Custom Tutorial.](README_CustomTutorial.md)
 
 ## Usage
 
