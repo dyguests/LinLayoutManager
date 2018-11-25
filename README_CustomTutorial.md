@@ -48,3 +48,8 @@ If you don't want position first item at center of screen. but right out of scre
         return .5f
     }
 
+![](./graphics/tutorial/tutorial_5.gif)
+
+## More else?
+
+Will, please see the sources.
