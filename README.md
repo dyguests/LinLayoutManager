@@ -18,7 +18,7 @@ A linear LayoutManger can scroll by any `Curves`.
 | Slash | 斜线 | x=i+0.5;y=slope*i+0.5 | ![](./graphics/slash.gif) | slope |
 | FerrisWheel | 摩天轮 | ![](./graphics/ferrisWheelCode.png) | ![](./graphics/FerrisWheel.gif) |   |
 
-#### Custom your curve.
+#### **How to custom your curve.**
 
 ![](./graphics/tutorial/tutorial_5.gif)
 
