@@ -22,7 +22,7 @@ A linear LayoutManger can scroll by any `Curves`.
 
 Implements CurveLayoutManger.Curve.
 
-That's it.
+TODO.
 
 ## Usage
 
@@ -38,7 +38,7 @@ That's it.
         }
     }
 
-### Step1. Set layoutManger like this:
+### Step2. Set layoutManger like this:
 
     recycler_view.layoutManager = CurveLayoutManger(Slash())
 
