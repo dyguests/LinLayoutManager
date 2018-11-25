@@ -74,7 +74,7 @@ class CurveLayoutManger(
             val width = getDecoratedMeasuredWidth(view)
             val height = getDecoratedMeasuredHeight(view)
 
-            //缓存每个item的尺寸
+            //累积(两个元素间的距离)偏移值
             allItemSize[i]?.apply {
                 this.width = width
                 this.height = height
@@ -199,7 +199,7 @@ class CurveLayoutManger(
             // 对应view的显示尺寸
             val (width, height) = allItemSize[index]
 
-            //累积偏移值
+            //累积(两个元素间的距离)偏移值
             nextVector2.apply {
                 x = width.toFloat() / getHorizontalSpace()
                 y = height.toFloat() / getVerticalSpace()
