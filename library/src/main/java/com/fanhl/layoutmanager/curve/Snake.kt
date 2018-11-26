@@ -14,19 +14,11 @@ class Snake(
 ) : PathCurve() {
     private var itemSpacing = 1f
 
-    private val curveLengthInScreen: Float
-
     init {
         createPath(row, col, path)
         pathMeasure.setPath(path, false)
-        curveLengthInScreen = pathMeasure.length - 2f
+        scale = pathMeasure.length - 2f
         updateItemSpacing()
-    }
-
-    override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
-        pathMeasure.getPosTan((getInitOffset() + i/curveLengthInScreen) * pathMeasure.length, pos, null)
-        position.x = pos[0]
-        position.y = pos[1]
     }
 
     override fun getScrollOrientation(): Int {
@@ -51,7 +43,7 @@ class Snake(
 
     private fun updateItemSpacing() {
         val length = pathMeasure.length
-        itemSpacing = curveLengthInScreen*(length - 2f) / length / (row * col - 1)
+        itemSpacing =scale* (length - 2f) / length / (row * col - 1)
     }
 
     private fun createPath(row: Int, col: Int, path: Path) {
