@@ -9,7 +9,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  * @author fanhl
  */
 class Snake(
-    private val row: Int = 4,
+    private val row: Int = 5,
     private val col: Int = 4
 ) : PathCurve() {
     private var itemSpacing = 1f
@@ -22,6 +22,10 @@ class Snake(
 
     override fun getItemSpacing(size1: CurveLayoutManger.Vector2, size2: CurveLayoutManger.Vector2): Float {
         return itemSpacing
+    }
+
+    override fun getEndOffset(size: CurveLayoutManger.Vector2): Float {
+        return -itemSpacing * (row * col - 1)
     }
 
     override fun toString(): String {
