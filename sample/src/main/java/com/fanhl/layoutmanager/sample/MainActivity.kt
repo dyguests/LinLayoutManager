@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshData() {
-        adapter.setNewData(List(20) { "$it" })
+        adapter.setNewData(List(30) { "$it" })
     }
 
     private fun bindCurve(curve: CurveLayoutManger.Curve) {
