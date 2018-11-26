@@ -9,7 +9,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  * @author fanhl
  */
 class Snake(
-    private val row: Int = 4,
+    private val row: Int = 5,
     private val col: Int = 4
 ) : PathCurve() {
     private var itemSpacing = 1f
@@ -37,7 +37,7 @@ class Snake(
     }
 
     override fun toString(): String {
-        return "Snake"
+        return "Snake(row:$row,col:$col)"
     }
 
     private fun updateItemSpacing() {
