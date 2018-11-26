@@ -14,9 +14,10 @@ A linear LayoutManger can scroll by any `Curves`.
 
 | type | 类型 | code | sample | params |
 |---|---|---|---|---|
+| Snake | 贪吃蛇 | PathCurve... | ![](./graphics/snake.gif) | row,col |
+| FerrisWheel | 摩天轮 | ![](./graphics/ferrisWheelCode.png) | ![](./graphics/FerrisWheel.gif) |   |
 | Parabola | 抛物线 | x=i+0.5; y=0.2i^2+0.5 | ![](./graphics/parabola.gif)  | focus |
 | Slash | 斜线 | x=i+0.5;y=slope*i+0.5 | ![](./graphics/slash.gif) | slope |
-| FerrisWheel | 摩天轮 | ![](./graphics/ferrisWheelCode.png) | ![](./graphics/FerrisWheel.gif) |   |
 
 #### **How to custom your curve.**
 
