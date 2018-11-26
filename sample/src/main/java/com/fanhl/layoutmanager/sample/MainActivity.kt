@@ -11,6 +11,7 @@ import com.fanhl.layoutmanager.curve.FerrisWheel
 import com.fanhl.layoutmanager.curve.Parabola
 import com.fanhl.layoutmanager.curve.Slash
 import com.fanhl.layoutmanager.curve.PathCurve
+import com.fanhl.layoutmanager.curve.Snake
 import com.fanhl.layoutmanager.sample.curve.ACurve
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_view.view.*
@@ -26,8 +27,8 @@ class MainActivity : AppCompatActivity() {
             Slash(),
             Slash(-1f),
             FerrisWheel(),
-            ACurve()/*,
-            PathCurve()*/
+            ACurve(),
+            Snake()
         )
     }
 

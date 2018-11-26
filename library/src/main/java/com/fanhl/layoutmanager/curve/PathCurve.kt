@@ -8,7 +8,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  * 路径
  */
 open class PathCurve(
-    path: Path
+    private val path: Path
 ) : CurveLayoutManger.Curve() {
 
     private val pathMeasure = PathMeasure(path, false)
