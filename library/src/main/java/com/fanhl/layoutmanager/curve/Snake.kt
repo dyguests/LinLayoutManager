@@ -9,7 +9,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  * @author fanhl
  */
 class Snake(
-    private val row: Int = 5,
+    private val row: Int = 4,
     private val col: Int = 4
 ) : PathCurve() {
     private var itemSpacing = 1f
@@ -24,7 +24,12 @@ class Snake(
         return itemSpacing
     }
 
+    override fun getInitOffset(): Float {
+        return 1f / pathMeasure.length
+    }
+
     override fun getEndOffset(size: CurveLayoutManger.Vector2): Float {
+        //FIXME 这里宽高要分开计算
         return -itemSpacing * (row * col - 1)
     }
 
@@ -33,8 +38,8 @@ class Snake(
     }
 
     private fun updateItemSpacing() {
-//        itemSpacing = pathMeasure.length / (row * col - 1)
-        itemSpacing = 1f / (row * col - 1)
+        val length = pathMeasure.length
+        itemSpacing = (length - 2f) / length / (row * col - 1)
     }
 
     private fun createPath(row: Int, col: Int, path: Path) {
@@ -46,7 +51,10 @@ class Snake(
         //初始位置
         val vector2 = CurveLayoutManger.Vector2(eachWidth / 2, eachHeight / 2)
 
-        path.moveTo(vector2.x, vector2.y)
+        //这个点在屏幕外，用来将超出屏幕的点回收
+        path.moveTo(vector2.x, vector2.y - 1f)
+
+        path.lineTo(vector2.x, vector2.y)
 
         /*
         当前方向
@@ -81,5 +89,8 @@ class Snake(
 
             direction = (direction + 1) % 4
         }
+
+        //这个点在屏幕外，用来将超出屏幕的点回收
+        path.lineTo(vector2.x, vector2.y + 1f)
     }
 }
