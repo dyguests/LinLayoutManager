@@ -20,6 +20,10 @@ class Snake(
         updateItemSpacing()
     }
 
+    override fun getScrollOrientation(): Int {
+        return CurveLayoutManger.VERTICAL
+    }
+
     override fun getItemSpacing(size1: CurveLayoutManger.Vector2, size2: CurveLayoutManger.Vector2): Float {
         return itemSpacing
     }
@@ -29,7 +33,6 @@ class Snake(
     }
 
     override fun getEndOffset(size: CurveLayoutManger.Vector2): Float {
-        //FIXME 这里宽高要分开计算
         return -itemSpacing * (row * col - 1)
     }
 

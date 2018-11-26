@@ -11,7 +11,7 @@ open class PathCurve : CurveLayoutManger.Curve() {
     protected val path = Path()
     protected val pathMeasure = PathMeasure()
 
-    private val pos = FloatArray(2)
+    protected val pos = FloatArray(2)
 
     override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
         pathMeasure.getPosTan((getInitOffset() + i) * pathMeasure.length, pos, null)
