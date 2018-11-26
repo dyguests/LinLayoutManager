@@ -9,60 +9,71 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  * @author fanhl
  */
 class Snake(
-    row: Int = 4,
-    col: Int = 4
-) : PathCurve(createPath(row, col)) {
+    private val row: Int = 4,
+    private val col: Int = 4
+) : PathCurve() {
+    private var itemSpacing = 1f
+
+    init {
+        createPath(row, col, path)
+        updateItemSpacing()
+    }
+
+    override fun getItemSpacing(size1: CurveLayoutManger.Vector2, size2: CurveLayoutManger.Vector2): Float {
+        return itemSpacing
+    }
+
     override fun toString(): String {
         return "Snake"
     }
 
-    companion object {
-        private fun createPath(row: Int, col: Int): Path {
-            val eachWidth = 1f / col
-            val eachHeight = 1f / row
+    private fun updateItemSpacing() {
+        itemSpacing = pathMeasure.length / row / col
+    }
 
-            val path = Path()
+    private fun createPath(row: Int, col: Int, path: Path) {
+        val eachWidth = 1f / col
+        val eachHeight = 1f / row
 
-            //初始位置
-            val vector2 = CurveLayoutManger.Vector2(eachWidth / 2, eachHeight / 2)
+        path.reset()
 
-            path.moveTo(vector2.x, vector2.y)
+        //初始位置
+        val vector2 = CurveLayoutManger.Vector2(eachWidth / 2, eachHeight / 2)
 
-            /*
-            当前方向
-            0 右
-            1 下
-            2 左
-            3 下
-            */
-            var direction = 0
+        path.moveTo(vector2.x, vector2.y)
 
-            var currRow = 0
-            while (currRow < row) {
-                if (direction == 0) {
-                    //绘制到当前行最右边
-                    vector2.x = (col - .5f) * eachWidth
+        /*
+        当前方向
+        0 右
+        1 下
+        2 左
+        3 下
+        */
+        var direction = 0
 
-                    currRow++
-                } else if (direction == 1) {
-                    //绘制到正下方
-                    vector2.y += eachHeight
-                } else if (direction == 2) {
-                    //绘制到当前行最左边
-                    vector2.x = .5f * eachWidth
+        var currRow = 0
+        while (currRow < row) {
+            if (direction == 0) {
+                //绘制到当前行最右边
+                vector2.x = (col - .5f) * eachWidth
 
-                    currRow++
-                } else if (direction == 3) {
-                    //绘制到正下方
-                    vector2.y += eachHeight
-                }
+                currRow++
+            } else if (direction == 1) {
+                //绘制到正下方
+                vector2.y += eachHeight
+            } else if (direction == 2) {
+                //绘制到当前行最左边
+                vector2.x = .5f * eachWidth
 
-                path.lineTo(vector2.x, vector2.y)
-
-                direction = (direction + 1) % 4
+                currRow++
+            } else if (direction == 3) {
+                //绘制到正下方
+                vector2.y += eachHeight
             }
 
-            return path
+            path.lineTo(vector2.x, vector2.y)
+
+            direction = (direction + 1) % 4
         }
     }
 }

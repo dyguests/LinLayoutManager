@@ -7,19 +7,11 @@ import com.fanhl.layoutmanager.CurveLayoutManger
 /**
  * 路径
  */
-open class PathCurve(
-    private val path: Path
-) : CurveLayoutManger.Curve() {
-
-    private val pathMeasure = PathMeasure(path, false)
+open class PathCurve : CurveLayoutManger.Curve() {
+    protected val path = Path()
+    protected val pathMeasure = PathMeasure(path, false)
 
     private val pos = FloatArray(2)
-
-    init {
-        if (pathMeasure.length <= 0f) {
-            throw Exception("Don't use empty path")
-        }
-    }
 
     override fun getInterpolation(i: Float, position: CurveLayoutManger.Vector2) {
         pathMeasure.getPosTan((getInitOffset() + i) * pathMeasure.length, pos, null)
