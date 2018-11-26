@@ -9,7 +9,7 @@ import com.fanhl.layoutmanager.CurveLayoutManger
  */
 open class PathCurve : CurveLayoutManger.Curve() {
     protected val path = Path()
-    protected val pathMeasure = PathMeasure(path, false)
+    protected val pathMeasure = PathMeasure()
 
     private val pos = FloatArray(2)
 

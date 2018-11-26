@@ -16,6 +16,7 @@ class Snake(
 
     init {
         createPath(row, col, path)
+        pathMeasure.setPath(path, false)
         updateItemSpacing()
     }
 
@@ -28,7 +29,8 @@ class Snake(
     }
 
     private fun updateItemSpacing() {
-        itemSpacing = pathMeasure.length / row / col
+//        itemSpacing = pathMeasure.length / (row * col - 1)
+        itemSpacing = 1f / (row * col - 1)
     }
 
     private fun createPath(row: Int, col: Int, path: Path) {
