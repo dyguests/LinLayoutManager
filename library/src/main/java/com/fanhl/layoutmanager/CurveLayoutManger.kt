@@ -20,7 +20,7 @@ class CurveLayoutManger(
     private var verticalScrollOffset = 0
 
     /** 总共可以偏移的距离 */
-    private var totalDistance = 0
+    private var totalDistance = 0f
 
     // 当前scroll offset状态下的显示区域
     private val displayFrame = Rect()
@@ -63,7 +63,7 @@ class CurveLayoutManger(
         //先更新上宽比
         curve.ratio = getHorizontalSpace().toFloat() / getVerticalSpace()
 
-        totalDistance = 0
+        totalDistance = 0f
         for (i in 0 until itemCount) {
             val view = recycler.getViewForPosition(i)
 
@@ -89,14 +89,14 @@ class CurveLayoutManger(
             }
 
             if (i == 0) {
-                totalDistance += (curve.getStartOffset(nextVector2) * getUnitSpace()).toInt()
+                totalDistance += (curve.getStartOffset(nextVector2) * getUnitSpace())
             } else if (i == itemCount - 1) {
-                totalDistance += (curve.getEndOffset(nextVector2) * getUnitSpace()).toInt()
+                totalDistance += (curve.getEndOffset(nextVector2) * getUnitSpace())
             }
 
             //累积总totalDistance
             if (i > 0) {
-                totalDistance += (curve.getItemSpacing(lastVector2, nextVector2) * getUnitSpace()).toInt()
+                totalDistance += (curve.getItemSpacing(lastVector2, nextVector2) * getUnitSpace())
             }
             lastVector2.apply {
                 x = nextVector2.x
@@ -138,7 +138,7 @@ class CurveLayoutManger(
         // FIXME: 2018/11/24 fanhl 另外还需要一种scroll方式用于贴边
         //这种scroll的区域中 居中，第一个元素可以居中，最后一个元素也可以居中
         else if (horizontalScrollOffset + dx > totalDistance) {
-            travel = totalDistance - horizontalScrollOffset
+            travel = (totalDistance - horizontalScrollOffset).toInt()
         }
 
         //将水平方向的偏移量+travel
@@ -160,7 +160,7 @@ class CurveLayoutManger(
         if (verticalScrollOffset + dy < 0) {
             travel = -verticalScrollOffset
         } else if (verticalScrollOffset + dy > totalDistance) {
-            travel = totalDistance - verticalScrollOffset
+            travel = (totalDistance - verticalScrollOffset).toInt()
         }
 
         //将水平方向的偏移量+travel
