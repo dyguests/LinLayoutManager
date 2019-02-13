@@ -41,7 +41,7 @@ A linear LayoutManger can scroll by any `Curves`.
 
 ### Step2. Set layoutManger like this:
 
-    recycler_view.layoutManager = CurveLayoutManger(Slash())
+    recycler_view.layoutManager = CurveLayoutManger(Parabola())
 
 ## Import
 
